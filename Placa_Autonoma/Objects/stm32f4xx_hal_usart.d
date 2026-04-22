@@ -1,5 +1,5 @@
-./objects/stm32f4xx_hal_tim.o: \
-  C:\Users\guill\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c \
+./objects/stm32f4xx_hal_usart.o: \
+  C:\Users\guill\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c \
   C:\Users\guill\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h \
   RTE\Device\STM32F429ZITx\stm32f4xx_hal_conf.h \
   RTE\_Target_1\RTE_Components.h \

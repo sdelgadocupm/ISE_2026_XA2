@@ -4,8 +4,6 @@
 #include "main.h"
 #include "cmsis_os2.h"
 
-#define ECO2_UMBRAL 1200
-#define TVOC_UMBRAL 400
 
 // Funciones
 void I2C_Signal_Event(uint32_t event);

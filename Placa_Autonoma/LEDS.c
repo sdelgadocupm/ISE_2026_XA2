@@ -6,7 +6,7 @@
  *---------------------------------------------------------------------------*/
  
 osThreadId_t tid_LEDS;                        // thread id
-
+GPIO_InitTypeDef GPIO_InitStruct;
 static osTimerId_t ledBlinkTimer;
 static volatile uint8_t alarma_activa = 0;
  
@@ -18,7 +18,7 @@ static void LedBlinkCb(void *argument) {
 }
  
 int Init_Thread_LEDS (void) {
- 
+
   tid_LEDS = osThreadNew(Thread_LEDS, NULL, NULL);
   if (tid_LEDS == NULL) {
     return(-1);
@@ -29,7 +29,7 @@ int Init_Thread_LEDS (void) {
  
 void Thread_LEDS (void *argument) {
   (void)argument;
-  
+    initLeds();
  ledBlinkTimer = osTimerNew(LedBlinkCb, osTimerPeriodic, NULL, NULL);
   if (ledBlinkTimer != NULL) {
     osTimerStart(ledBlinkTimer, 300);
@@ -54,4 +54,31 @@ void Thread_LEDS (void *argument) {
     osThreadYield();                            // suspend thread
   }
 }
+}
+void initLeds (void)
+{
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  
+  
+  //BLUE
+  GPIO_InitStruct.Pin = GPIO_PIN_11;
+  HAL_GPIO_Init(GPIOD,&GPIO_InitStruct);
+  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_11,GPIO_PIN_SET);
+  
+  //GREEN
+  GPIO_InitStruct.Pin = GPIO_PIN_12;
+  HAL_GPIO_Init(GPIOD,&GPIO_InitStruct);
+  
+  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET);
+  
+  //RED
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  HAL_GPIO_Init(GPIOD,&GPIO_InitStruct);
+  
+  
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
 }

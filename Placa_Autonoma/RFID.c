@@ -1,9 +1,11 @@
 #include "RFID.h"
 #include <string.h>
+#include "Principal.h" 
 
 extern ARM_DRIVER_SPI Driver_SPI1;
 ARM_DRIVER_SPI* RC522_SPIdrv = &Driver_SPI1;
 
+uint8_t ultimo_uid[4];
 
 #define RC522_RST_PORT   GPIOA
 #define RC522_RST_PIN    GPIO_PIN_6
@@ -346,6 +348,7 @@ bool RFID_TryDisarm(void) {
 	};
   for (size_t i = 0; i < (sizeof(allowed_uids)/sizeof(allowed_uids[0])); i++) {
     if (UID_Equals(uid.uid, allowed_uids[i])) {
+			memcpy(ultimo_uid, uid.uid, 4);
       return true;
     }
   }

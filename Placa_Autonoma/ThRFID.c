@@ -6,7 +6,7 @@ extern osThreadId_t tid_Principal;
 osThreadId_t tid_ThRFID;                        // thread id
 extern volatile state_t modo;
 void ThRFID (void *argument);                   // thread function
- 
+uint8_t remoto = 0;
 int Init_ThRFID (void) {
 	
   tid_ThRFID = osThreadNew(ThRFID, NULL, NULL);
@@ -27,8 +27,13 @@ void ThRFID (void *argument) {
 		 if (RFID_TryDisarm()) {
 					osThreadFlagsSet(tid_Principal, 0x01);
 					osDelay(500); // anti-rebote para no disparar varias veces
-				} else {
-					osDelay(50);
+			} 
+		 else if(remoto == 1){
+			 osThreadFlagsSet(tid_Principal, 0x01);
+					osDelay(500);
+		 }
+		 else {
+				osDelay(50);
 			}
 		}else {
     osDelay(200);

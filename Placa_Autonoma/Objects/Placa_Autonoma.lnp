@@ -7,11 +7,13 @@
 ".\objects\thrfid.o"
 ".\objects\leds.o"
 ".\objects\pwm.o"
+".\objects\thcom.o"
 "..\..\..\..\..\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\RTOS2\RTX\Library\ARM\RTX_CM4F.lib"
 ".\objects\rtx_lib.o"
 ".\objects\rtx_config.o"
 ".\objects\i2c_stm32f4xx.o"
 ".\objects\spi_stm32f4xx.o"
+".\objects\usart_stm32f4xx.o"
 ".\objects\eventrecorder.o"
 ".\objects\retarget_io.o"
 ".\objects\stm32f4xx_hal.o"
@@ -33,6 +35,7 @@
 ".\objects\stm32f4xx_hal_tim_ex.o"
 ".\objects\startup_stm32f429xx.o"
 ".\objects\system_stm32f4xx.o"
+".\objects\stm32f4xx_hal_usart.o"
 --strict --scatter ".\Objects\Placa_Autonoma.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
