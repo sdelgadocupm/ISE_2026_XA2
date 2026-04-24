@@ -2,19 +2,21 @@
 #include "CA.h"
 #include <stdio.h>
 /*----------------------------------------------------------------------------
- *      Thread Air Quality
+ *      Thread Calidad del Aire
  *---------------------------------------------------------------------------*/
 
 osThreadId_t tid_AirQuality;
 
 extern ARM_DRIVER_I2C  Driver_I2C1;
 static ARM_DRIVER_I2C *I2Cdrv = &Driver_I2C1;
+
 osMessageQueueId_t mid_airQueue;
 
-
 int Init_ThAirQuality (void) {
+	
   mid_airQueue = osMessageQueueNew(8, sizeof(air_sample_t), NULL);
 	
+	//Configuración I2C
   I2Cdrv->Initialize(I2C_Signal_Event);
   I2Cdrv->PowerControl (ARM_POWER_FULL);
   I2Cdrv->Control (ARM_I2C_BUS_SPEED, ARM_I2C_BUS_SPEED_STANDARD);
@@ -28,16 +30,18 @@ int Init_ThAirQuality (void) {
   return 0;
 }
 
+//Callback I2C
 void I2C_Signal_Event(uint32_t event)
 {
   osThreadFlagsSet(tid_AirQuality, 0x01);
 }
 
+//Inicialización del sensor
 void CCS811_Init(void)
 {
   uint8_t cmd;
 
-  // APP_START
+  // Comienzo de la aplicación
   cmd = 0xF4;
   I2Cdrv->MasterTransmit(CCS811_ADDR, &cmd, 1, false);
   osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
@@ -59,9 +63,7 @@ void Th_AirQuality (void *argument) {
 
   while (1) {
 		
-		//Espera orden del principa
-		
-		// 1. Leer STATUS
+		// Leer STATUS
     reg = 0x00;
     I2Cdrv->MasterTransmit(CCS811_ADDR, &reg, 1, true);
     osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
@@ -69,10 +71,10 @@ void Th_AirQuality (void *argument) {
     I2Cdrv->MasterReceive(CCS811_ADDR, &status, 1, false);
     osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
 
-    // ?? 2. Comprobar DATA_READY (bit 3)
+    // Comprobar DATA_READY (bit 3)
     if (!(status & (1 << 3))) {
         osDelay(100);
-        continue;  // IMPORTANTE: saltar lectura
+        continue;  //saltar lectura
     }
 		
     // Seleccionar registro de datos
@@ -86,6 +88,7 @@ void Th_AirQuality (void *argument) {
     osThreadFlagsWait(0x01, osFlagsWaitAny, osWaitForever);
 		
 		osThreadFlagsWait(0x02, osFlagsWaitAny, osWaitForever);
+		
     // Conversión de datos
 		air_sample_t s;
     s.eco2 = (buf[0] << 8) | buf[1];

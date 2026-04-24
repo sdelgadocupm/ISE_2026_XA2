@@ -117,7 +117,10 @@ int main(void)
 #ifdef RTE_CMSIS_RTOS2
   /* Initialize CMSIS-RTOS2 */
   osKernelInitialize ();
+	
+	//Inicialización Hilo Principal
 	Init_Principal();
+	
   /* Create thread functions that start executing, 
   Example: osThreadNew(app_main, NULL, NULL); */
 

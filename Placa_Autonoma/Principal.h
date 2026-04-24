@@ -9,7 +9,10 @@
 #include "LEDS.h"
 #include "PWM.h"
 #include "ThCom.h"
+#include "adc.h"
+#include "Recepcion.h"
 
+//Flag de desactivación
 #define FLAG_DISARM_RFID 0X01
 
 //DEFINICIÓN DE ID DE MENSAJES
@@ -26,14 +29,13 @@
 #define STOP 0
 #define RUN 1
 
-//MODODS
+//MODOS
 #define BAJO_CONS 0
 #define PREACT 1
 #define ALAR 2
 
 
-typedef enum
-{
+typedef enum{
 BAJO_CONSUMO,PREACTIVACION,ALARMA
 } state_t;
 

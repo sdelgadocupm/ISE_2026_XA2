@@ -22,8 +22,6 @@ static osStatus_t osStatusQueue;
 osMessageQueueId_t mid_ComQueue;
 MSGQUEUE_OBJ_COM_t msgCom;
 
-
-
 //CREACIÓN DE LA CALLBACK BLOQUEANTE
 
 void myUSART_callback(uint32_t event){
@@ -54,7 +52,7 @@ void ThCom (void *argument) {
 										ARM_USART_DATA_BITS_8|
 										ARM_USART_PARITY_NONE|
 										ARM_USART_STOP_BITS_1|
-										ARM_USART_FLOW_CONTROL_NONE, 9600); // LO ÚLTIMO ES EL BAUD RATE
+										ARM_USART_FLOW_CONTROL_NONE, 9600);
 	
 	USARTdrv->Control(ARM_USART_CONTROL_TX, 1);
 	USARTdrv->Control(ARM_USART_CONTROL_RX, 1);
@@ -63,6 +61,6 @@ void ThCom (void *argument) {
 		osStatusQueue = osMessageQueueGet(mid_ComQueue, &msgCom, 0U, osWaitForever);
 		USARTdrv->Send(msgCom.Mensaje, msgCom.TamMens);  
 		osThreadFlagsWait(0x01, osFlagsWaitAny , osWaitForever);
-    osThreadYield();                            // suspend thread
+    osThreadYield();                            
   }
 }

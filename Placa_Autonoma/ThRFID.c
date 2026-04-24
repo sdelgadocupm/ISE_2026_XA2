@@ -18,6 +18,7 @@ int Init_ThRFID (void) {
 }
  
 void ThRFID (void *argument) {
+	//Inicio de sensor y SPI
   RC522_BSP_GPIO_Init();
   RC522_SPI1_Init();
 	RC522_Init();
@@ -29,7 +30,7 @@ void ThRFID (void *argument) {
 					osDelay(500); // anti-rebote para no disparar varias veces
 			} 
 		 else if(remoto == 1){
-			 osThreadFlagsSet(tid_Principal, 0x01);
+			    osThreadFlagsSet(tid_Principal, 0x01);
 					osDelay(500);
 		 }
 		 else {

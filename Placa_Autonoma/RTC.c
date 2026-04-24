@@ -52,31 +52,7 @@ void RTC_CalendarShow(uint8_t *showtime, uint8_t *showdate){
   sprintf((char *)showdate, "%2d-%2d-%2d", sdatestructureget.Month, sdatestructureget.Date, 2000 + sdatestructureget.Year);
 }
 
-void RTC_SetAlarm(void){
-  RTC_TimeTypeDef stime;
-  RTC_AlarmTypeDef sAlarm;
-	
-	  HAL_RTC_DeactivateAlarm(&RtcHandle, RTC_ALARM_A);
-	
-  __HAL_RTC_ALARM_CLEAR_FLAG(&RtcHandle, RTC_FLAG_ALRAF);
-  __HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_ALARM_EVENT);
-  
-  HAL_RTC_GetTime(&RtcHandle,&stime, RTC_FORMAT_BIN);
-  
-  sAlarm.AlarmTime.Hours = stime.Hours;
-  sAlarm.AlarmTime.Minutes = stime.Minutes;
-  sAlarm.AlarmTime.Seconds = (stime.Seconds+10)%60;
 
-  sAlarm.AlarmMask = RTC_ALARMMASK_DATEWEEKDAY;
-  sAlarm.AlarmSubSecondMask= RTC_ALARMSUBSECONDMASK_ALL;
-  sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
-  sAlarm.AlarmDateWeekDay= 1;
-  sAlarm.Alarm = RTC_ALARM_A;
-  
-  HAL_RTC_SetAlarm_IT(&RtcHandle,&sAlarm,RTC_FORMAT_BIN); 
-
-
-}
 
 void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc) {
 	
@@ -108,17 +84,14 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc) {
 
 extern osThreadId_t TID_Led;  
 
-void RTC_Alarm_IRQHandler(void){
-  HAL_RTC_AlarmIRQHandler(&RtcHandle);
-}
 
-void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc){
-  RTC_SetAlarm();
-}
+/*----------------------------------------------------------------------------
+ *       CONFIGURACIÓN INICIAL DEL RTC
+ *---------------------------------------------------------------------------*/
 
 void RTC_init(void){
+	
 	HAL_RTC_MspInit(&RtcHandle);
-
 	
 	RtcHandle.Instance = RTC; 
   RtcHandle.Init.HourFormat = RTC_HOURFORMAT_24;
@@ -153,30 +126,33 @@ void RTC_init(void){
     __HAL_RCC_CLEAR_RESET_FLAGS();
   }
 	
-//	HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
-//	RTC_SetAlarm();
 }
 
-void RTC_SetWakeUpEvery60s(void)
-{
+
+/*----------------------------------------------------------------------------
+ *      FUNCIÓN QUE DESPIERTA AL SISTEMA CADA 10 SEGUNDOS
+ *---------------------------------------------------------------------------*/
+
+void RTC_SetWakeUpEvery10s(void){
+	
   // 1) Desactivar por si estaba activo
   HAL_RTCEx_DeactivateWakeUpTimer(&RtcHandle);
 
-  // 2) Limpiar flags (importante)
+  // 2) Limpiar flags
   __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&RtcHandle, RTC_FLAG_WUTF);
   __HAL_RTC_EXTI_CLEAR_FLAG(RTC_EXTI_LINE_WAKEUPTIMER_EVENT);
 
-  // 3) Programar 60 segundos
-  // CK_SPRE = 1Hz típicamente cuando RTC está bien configurado con LSE/predviders
+  // 3) Programar 10 segundos
+
   if (HAL_RTCEx_SetWakeUpTimer_IT(&RtcHandle,10,  // segundos
 		RTC_WAKEUPCLOCK_CK_SPRE_16BITS) != HAL_OK) {
-    // aquí podrías poner un breakpoint o Error_Handler()
   }
 
-  // 4) Habilitar NVIC del WKUP
+  // 4) Habilitar la interrupción del Wake-up
   HAL_NVIC_EnableIRQ(RTC_WKUP_IRQn);
 }
-void RTC_WKUP_IRQHandler(void)
-{
+
+void RTC_WKUP_IRQHandler(void){
+	//Handler que causa que se despierte el sistema
   HAL_RTCEx_WakeUpTimerIRQHandler(&RtcHandle);
 }
