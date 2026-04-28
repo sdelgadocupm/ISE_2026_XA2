@@ -1,0 +1,111 @@
+
+**** 04/09/26 18:17:36 ******* PSpice Lite (March 2016) ******* ID# 10813 ****
+
+ ** Profile: "SCHEMATIC1-S1"  [ d:\dcser\documents\universidad\ise\b2\amp_ins\amp_ins-pspicefiles\schematic1\s1.sim ] 
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "S1.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of C:\Users\dcser\AppData\Roaming\SPB_Data\cdssetup\OrCAD_PSpice\17.2.0\PSpice.ini file:
+.lib "D:\dcser\Documents\Universidad\ISE\B2\snom268c\lmx58_lm2904.lib" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sloj050b\OP07C.LIB" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sloj050b\OP07C.LIB" 
+.lib "nomd.lib" 
+
+*Analysis directives: 
+.TRAN  0 10s 0 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source AMP_INS
+R_R1         N00714 N00509  10k TC=0,0 
+R_R2         N00721 N00714  1k TC=0,0 
+R_R3         N00524 N00721  10k TC=0,0 
+R_R4         N00520 N00509  10k TC=0,0 
+R_R5         VOUT N00520  10k TC=0,0 
+R_R6         N00535 N00524  10k TC=0,0 
+R_R7         0 N00535  10k TC=0,0 
+R_R8         N01164 N01152  0.1 TC=0,0 
+V_V1         VCC 0 9Vdc
+R_R9         0 N01164  10k TC=0,0 
+R_R10         0 N01152  10k TC=0,0 
+I_I1         N01164 N01152 DC 1.5Adc  
+X_U1         N01152 N00714 VCC 0 N00509 LMX58_LM2904
+X_U2         N01164 N00721 VCC 0 N00524 LMX58_LM2904
+X_U3         N00535 N00520 VCC 0 VOUT LMX58_LM2904
+
+**** RESUMING S1.cir ****
+.END
+
+ERROR -- EVALUATION VERSION analog Node Limit (75 Nodes) Exceeded!
+
+
+
+
+ABORTING SIMULATION
+**** 04/09/26 18:17:36 ******* PSpice Lite (March 2016) ******* ID# 10813 ****
+
+ ** Profile: "SCHEMATIC1-S1"  [ d:\dcser\documents\universidad\ise\b2\amp_ins\amp_ins-pspicefiles\schematic1\s1.sim ] 
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+Node counts:
+  Top level (NUNODS)                =          11
+  External (NCNODS)                 =         317
+  Total (NUMNOD)                    =         317
+
+Total device count (NUMEL)          =         681
+  Capacitors (C)                    =          93
+  Diodes (D)                        =          18
+  VCVS (E)                          =          39
+  VCCS (G)                          =         120
+  CCVS (H)                          =           9
+  Current Sources (I)               =          28
+  Resistors (R)                     =         319
+  VSwitches (S)                     =          15
+  Voltage Sources (V)               =          40
+
+Number of subcircuits (X)           =          63
+
+Analysis statistics:
+  No. total time points (NUMTTP)    =           0
+  No. rejected time points (NUMRTP) =           0
+  No. iterations (NUMNIT)           =           0
+
+Load Threads                        =           1
+
+Runtime statistics:                       Seconds      Iterations
+  Readin                            =         .02
+  General setup                     =        0.00
+  CMI setup                     =        0.00
+  Setup                             =        0.00
+  DC sweep                          =        0.00               0
+  Bias point                        =        0.00               0
+  AC and noise                      =        0.00               0
+  Total transient analysis          =        0.00
+  Output                            =        0.00
+  Overhead                          =         .11
+  Total job time                    =         .03
+

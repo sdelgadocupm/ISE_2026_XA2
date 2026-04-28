@@ -1,0 +1,114 @@
+(ExpressProject "amp_ins"
+  (ProjectVersion "19981106")
+  (SoftwareVersion "25.1 S020 (4396590)  [2/5/2026]-[04/21/26]")
+  (ProjectType "Analog or A/D Mixed Mode")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\amp_ins.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (PSPICE_Regenerate_Netlist_Flag "FALSE")
+    (DOCKED "TRUE")
+    (DOCKING_POSITION "59420"))
+  (Folder "Layout")
+  (Folder "Outputs"
+    (File ".\amp_ins-pspicefiles\schematic1\schematic1.net"
+      (Type "Report")))
+  (Folder "PSpice Resources"
+    (Folder "Simulation Profiles"
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\amp_ins-pspicefiles\schematic1\s1.sim"
+        (DisplayName "SCHEMATIC1-S1")
+        (Type "PSpice Profile"))
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\amp_ins-pspicefiles\schematic1\s2.sim"
+        (DisplayName "SCHEMATIC1-S2")
+        (Type "PSpice Profile"))
+      (ActiveProfile ".\amp_ins-pspicefiles\schematic1\s3.sim")
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\amp_ins-pspicefiles\schematic1\s3.sim"
+        (DisplayName "SCHEMATIC1-s3")
+        (Type "PSpice Profile")))
+    (Folder "Model Libraries"
+      (Sort User))
+    (Folder "Stimulus Files"
+      (Sort User))
+    (Folder "Include Files"
+      (Sort User)))
+  (DefaultLibraryBrowseDirectory "library\PSpice")
+  (PartMRUSelector
+    (UA741
+      (FullPartName "UA741.Normal")
+      (LibraryName "C:\CADENCE\ORCADX_25.1\TOOLS\CAPTURE\LIBRARY\OPAMP.OLB")
+      (DeviceIndex "0"))
+    (LMX24_LM2902
+      (FullPartName "LMX24_LM2902.Normal")
+      (LibraryName
+         "D:\DCSER\DOCUMENTS\UNIVERSIDAD\ISE\B2\SGLM009D\LIBRARY\LMX24_LM2902.OLB")
+      (DeviceIndex "0"))
+    (OP07C
+      (FullPartName "OP07C.Normal")
+      (LibraryName "D:\DCSER\DOCUMENTS\UNIVERSIDAD\ISE\B2\SLOJ050B\OP07C.OLB")
+      (DeviceIndex "0"))
+    (OPAx333
+      (FullPartName "OPAx333.Normal")
+      (LibraryName "D:\DCSER\DOCUMENTS\UNIVERSIDAD\ISE\B2\SBOC084G\OPAX333.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (LMX58_LM2904
+      (FullPartName "LMX58_LM2904.Normal")
+      (LibraryName
+         "D:\DCSER\DOCUMENTS\UNIVERSIDAD\ISE\B2\SNOM268C\LIBRARY\LMX58_LM2904.OLB")
+      (DeviceIndex "0"))
+    (TLV2372
+      (FullPartName "TLV2372.Normal")
+      (LibraryName
+         "D:\DCSER\DOCUMENTS\UNIVERSIDAD\ISE\B2\SLOC063B\TLV2372_PSPICE_AIO\TLV2372.OLB")
+      (DeviceIndex "0"))
+    (IDC
+      (FullPartName "IDC.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0"))
+    (0
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (VCC
+      (LibraryName "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (VDC
+      (FullPartName "VDC.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_17.2\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory
+     "D:\dcser\Documents\Universidad\ISE\B2\sloj138")
+  (MPSSessionName "Sergio")
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Outputs")
+      (Select "Logs"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 0 200 0 395"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 5 753 24 413")
+        (Scroll "303 294")
+        (Zoom "212")
+        (Occurrence "/"))
+      (Path "D:\DCSER\DOCUMENTS\UNIVERSIDAD\ISE\B2\AMP_INS\AMP_INS.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1")))
+  (Folder "Logs"))

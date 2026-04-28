@@ -1,0 +1,10 @@
+"Qty";"Value";"Device";"Package";"Parts";"Description";"COPYRIGHT";"MANUFACTURER";"MANUFACTURER_PART_NUMBER";"MFR_NAME";"PARTREV";"POPULARITY";"SPICEPREFIX";"STANDARD";
+"1";"0.1";"R-EU_0617/17";"0617/17";"R16";"RESISTOR, European symbol";"";"";"";"";"";"0";"R";"";
+"1";"100k";"R-EU_0207/10";"0207/10";"R22";"RESISTOR, European symbol";"";"";"";"";"";"81";"R";"";
+"6";"100nF";"C-EU075-042X103";"C075-042X103";"C10, C11, C12, C13, C14, C15";"CAPACITOR, European symbol";"";"";"";"";"";"0";"C";"";
+"6";"10k";"R-EU_0207/10";"0207/10";"R10, R11, R12, R13, R14, R15";"RESISTOR, European symbol";"";"";"";"";"";"81";"R";"";
+"1";"1727010";"1727010";"PHOENIX_1727010";"IN";"";"";"Phoenix Contact";"";"";"03.03.2021";"";"";"Manufacturer Recommendations";
+"1";"1727023";"1727023";"PHOENIX_1727023";"SUPPLY";"";"";"Phoenix Contact";"";"";"03.03.2021";"";"";"Manufacturer Recommendations";
+"1";"1k";"R-EU_0207/10";"0207/10";"R9";"RESISTOR, European symbol";"";"";"";"";"";"81";"R";"";
+"3";"OP07CPZ";"OP07CPZ";"N_8_ADI";"U7, U8, U9";"";"Copyright (C) 2024 Ultra Librarian. All rights reserved.";"";"OP07CPZ";"Analog Devices Inc";"";"";"";"";
+"1";"VO";"PINHD-1X2";"1X02";"VO";"PIN HEADER";"";"";"";"";"";"98";"";"";

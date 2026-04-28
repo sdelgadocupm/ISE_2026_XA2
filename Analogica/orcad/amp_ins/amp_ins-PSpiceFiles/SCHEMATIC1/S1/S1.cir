@@ -1,0 +1,22 @@
+** Profile: "SCHEMATIC1-S1"  [ d:\dcser\documents\universidad\ise\b2\amp_ins\amp_ins-pspicefiles\schematic1\s1.sim ] 
+
+** Creating circuit file "S1.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of C:\Users\dcser\AppData\Roaming\SPB_Data\cdssetup\OrCAD_PSpice\17.2.0\PSpice.ini file:
+.lib "D:\dcser\Documents\Universidad\ISE\B2\snom268c\lmx58_lm2904.lib" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sloj050b\OP07C.LIB" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sloj050b\OP07C.LIB" 
+.lib "nomd.lib" 
+
+*Analysis directives: 
+.TRAN  0 10s 0 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+.END

@@ -1,0 +1,661 @@
+
+**** 04/20/26 19:54:10 **** PSpice 25.1.0 (28 January 2026) *** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-s3"  [ D:\dcser\Documents\Universidad\ISE\B2\amp_ins\amp_ins-pspicefiles\schematic1\s3.sim ] 
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "s3.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of C:\Users\dcser\AppData\Roaming\SPB_Data\cdssetup\OrCAD_PSpice\25.1.0\PSpice.ini file:
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sloj050b\OP07C.LIB" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sboc084g\OPAx333.LIB" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sglm009d\lmx24_lm2902.lib" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\sloc063b\TLV2372_PSPICE_AIO\TLV2372.LIB" 
+.lib "C:\Cadence\OrCADX_25.1\tools\pspice\Library\opamp.lib" 
+.lib "D:\dcser\Documents\Universidad\ISE\B2\snom268c\lmx58_lm2904.lib" 
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 10s 0 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source AMP_INS
+R_R1         N00716 N00513  10k TC=0,0 
+R_R2         N00721 N00716  1k TC=0,0 
+R_R3         N04795 N00721  10k TC=0,0 
+R_R4         N00520 N00513  10k TC=0,0 
+R_R5         N00646 N00520  10k TC=0,0 
+R_R6         N04771 N04795  10k TC=0,0 
+R_R7         0 N04771  10k TC=0,0 
+R_R8         0 N01152  0.1 TC=0,0 
+V_V1         VCC 0 5Vdc
+R_R9         0 0  10k TC=0,0 
+R_R10         0 N01152  10k TC=0,0 
+I_I1         N01152 0 DC 1.5Adc  
+V_V2         VEE 0 -5Vdc
+X_U4         N01152 N00716 VCC VEE N00513 LMX24_LM2902
+X_U5         0 N00721 VCC VEE N04795 LMX24_LM2902
+X_U6         N04771 N00520 VCC VEE N00646 LMX24_LM2902
+
+**** RESUMING s3.cir ****
+.END
+
+**** 04/20/26 19:54:10 **** PSpice 25.1.0 (28 January 2026) *** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-s3"  [ D:\dcser\Documents\Universidad\ISE\B2\amp_ins\amp_ins-pspicefiles\schematic1\s3.sim ] 
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U4.Xi_nn.DVNF X_U4.Xi_np.DVNF X_U4.Xe_n.DVN   X_U5.Xi_nn.DVNF 
+          IS  100.000000E-18  100.000000E-18  100.000000E-18  100.000000E-18 
+          KF  316.227800E-15  316.227800E-15   31.622780E-12  316.227800E-15 
+
+
+               X_U5.Xi_np.DVNF X_U5.Xe_n.DVN   X_U6.Xi_nn.DVNF X_U6.Xi_np.DVNF 
+          IS  100.000000E-18  100.000000E-18  100.000000E-18  100.000000E-18 
+          KF  316.227800E-15   31.622780E-12  316.227800E-15  316.227800E-15 
+
+
+               X_U6.Xe_n.DVN   
+          IS  100.000000E-18 
+          KF   31.622780E-12 
+
+
+**** 04/20/26 19:54:10 **** PSpice 25.1.0 (28 January 2026) *** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-s3"  [ D:\dcser\Documents\Universidad\ISE\B2\amp_ins\amp_ins-pspicefiles\schematic1\s3.sim ] 
+
+
+ ****     Resistor MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U4.R_NOISELESS 
+  T_Measured   27            
+   T_Current -273.15         
+           R    1            
+
+
+               X_U5.R_NOISELESS 
+  T_Measured   27            
+   T_Current -273.15         
+           R    1            
+
+
+               X_U6.R_NOISELESS 
+  T_Measured   27            
+   T_Current -273.15         
+           R    1            
+
+
+**** 04/20/26 19:54:10 **** PSpice 25.1.0 (28 January 2026) *** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-s3"  [ D:\dcser\Documents\Universidad\ISE\B2\amp_ins\amp_ins-pspicefiles\schematic1\s3.sim ] 
+
+
+ ****     Voltage Controlled Switch MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U4.BB_SW      X_U4.ESD_SW     X_U4.OL_SW      X_U4.OR_SW      
+         RON   50              50               1.000000E-03     .01         
+        ROFF    1.000000E+12    1.000000E+12    1.000000E+09    1.000000E+09 
+         VON     .7              .25             .9             1.000000E-03 
+        VOFF    0               0                .8             0            
+
+
+               X_U4.S_VSWITCH_1 
+         RON     .01         
+        ROFF    1.000000E+12 
+         VON     .01         
+        VOFF    0            
+
+
+               X_U4.S_VSWITCH_2 
+         RON     .01         
+        ROFF    1.000000E+12 
+         VON     .01         
+        VOFF    0            
+
+
+               X_U4.S_VSWITCH_3 
+         RON    1.000000E-03 
+        ROFF    1.000000E+12 
+         VON     .5          
+        VOFF     .1          
+
+
+               X_U4.S_VSWITCH_4 
+         RON   50            
+        ROFF    1.000000E+12 
+         VON     .5          
+        VOFF     .45         
+
+
+               X_U4.S_VSWITCH_5                X_U5.BB_SW      X_U5.ESD_SW     
+         RON   50                              50              50            
+        ROFF    1.000000E+12                    1.000000E+12    1.000000E+12 
+         VON     .5                              .7              .25         
+        VOFF     .45                            0               0            
+
+
+               X_U5.OL_SW      X_U5.OR_SW      
+         RON    1.000000E-03     .01         
+        ROFF    1.000000E+09    1.000000E+09 
+         VON     .9             1.000000E-03 
+        VOFF     .8             0            
+
+
+               X_U5.S_VSWITCH_1 
+         RON     .01         
+        ROFF    1.000000E+12 
+         VON     .01         
+        VOFF    0            
+
+
+               X_U5.S_VSWITCH_2 
+         RON     .01         
+        ROFF    1.000000E+12 
+         VON     .01         
+        VOFF    0            
+
+
+               X_U5.S_VSWITCH_3 
+         RON    1.000000E-03 
+        ROFF    1.000000E+12 
+         VON     .5          
+        VOFF     .1          
+
+
+               X_U5.S_VSWITCH_4 
+         RON   50            
+        ROFF    1.000000E+12 
+         VON     .5          
+        VOFF     .45         
+
+
+               X_U5.S_VSWITCH_5                X_U6.BB_SW      X_U6.ESD_SW     
+         RON   50                              50              50            
+        ROFF    1.000000E+12                    1.000000E+12    1.000000E+12 
+         VON     .5                              .7              .25         
+        VOFF     .45                            0               0            
+
+
+               X_U6.OL_SW      X_U6.OR_SW      
+         RON    1.000000E-03     .01         
+        ROFF    1.000000E+09    1.000000E+09 
+         VON     .9             1.000000E-03 
+        VOFF     .8             0            
+
+
+               X_U6.S_VSWITCH_1 
+         RON     .01         
+        ROFF    1.000000E+12 
+         VON     .01         
+        VOFF    0            
+
+
+               X_U6.S_VSWITCH_2 
+         RON     .01         
+        ROFF    1.000000E+12 
+         VON     .01         
+        VOFF    0            
+
+
+               X_U6.S_VSWITCH_3 
+         RON    1.000000E-03 
+        ROFF    1.000000E+12 
+         VON     .5          
+        VOFF     .1          
+
+
+               X_U6.S_VSWITCH_4 
+         RON   50            
+        ROFF    1.000000E+12 
+         VON     .5          
+        VOFF     .45         
+
+
+               X_U6.S_VSWITCH_5 
+         RON   50            
+        ROFF    1.000000E+12 
+         VON     .5          
+        VOFF     .45         
+
+
+Starting pseudo-transient algorithm.
+
+INFO(ORPSIM-16594): To improve Pseudotransient Convergence and Performance, set following options to relax stabilization criteria for capacitor currents and inductor voltages: PTRANABSTOL=1e-5, PTRANVNTOL=1e-4
+
+**** 04/20/26 19:54:10 **** PSpice 25.1.0 (28 January 2026) *** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-s3"  [ D:\dcser\Documents\Universidad\ISE\B2\amp_ins\amp_ins-pspicefiles\schematic1\s3.sim ] 
+
+
+ ****     INITIAL TRANSIENT SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(  VCC)    5.0000  (  VEE)   -5.0000  (N00513)   -1.6474 (N00520)     .7530     
+
+(N00646)    3.1531 (N00716)    -.1478 (N00721)     .0022 (N01152)    -.1500     
+
+(N04771)     .7508 (N04795)    1.5014 (X_U4.22)-397.2E-06                       
+
+(X_U4.23)   -4.9645                   (X_U4.24)    -.1478                       
+
+(X_U4.25)    -.1478                   (X_U4.26)    -.1478                       
+
+(X_U4.27)    -.1478                   (X_U4.28) -115.6700                       
+
+(X_U4.29)  -26.8980                   (X_U4.30) -115.6500                       
+
+(X_U4.31)    -.0289                   (X_U4.32) -115.6200                       
+
+(X_U4.33)   -1.6474                   (X_U4.34)   -2.9327                       
+
+(X_U4.35)   -2.9327                   (X_U4.36)    -.0035                       
+
+(X_U4.37)    -.1500                   (X_U4.38)-2.008E-12                       
+
+(X_U4.39)-2.008E-12                   (X_U4.40)-2.008E-12                       
+
+(X_U4.41)-2.008E-12                   (X_U4.42)   -1.7327                       
+
+(X_U4.43)   -1.7327                   (X_U4.44)   -4.1327                       
+
+(X_U4.45)   -4.1327                   (X_U4.46)    -.1478                       
+
+(X_U4.47) 5.000E-06                   (X_U4.48)     .5000                       
+
+(X_U4.49)-4.744E-06                   (X_U4.50)    -.1028                       
+
+(X_U4.51)   40.0000                   (X_U4.52)  -40.0000                       
+
+(X_U4.53) 392.3E-15                   (X_U4.54) 392.3E-15                       
+
+(X_U4.55)   -1.7327                   (X_U4.56)   -4.1327                       
+
+(X_U4.57)  180.0000                   (X_U4.58) -180.0000                       
+
+(X_U4.59)   -2.9327                   (X_U4.60) 392.3E-15                       
+
+(X_U4.61) 392.3E-15                   (X_U4.62) 392.3E-15                       
+
+(X_U4.63) 392.3E-15                   (X_U4.64) 392.3E-15                       
+
+(X_U4.65) 392.3E-15                   (X_U4.66)    3.7761                       
+
+(X_U4.67)   -4.3465                   (X_U4.68)    3.7761                       
+
+(X_U4.69)   -4.3465                   (X_U4.70) 392.3E-15                       
+
+(X_U4.71) 392.3E-15                   (X_U4.72) 392.3E-15                       
+
+(X_U4.73) 392.3E-15                   (X_U4.74) 392.3E-15                       
+
+(X_U4.75)    -.3900                   (X_U4.76)   -1.6474                       
+
+(X_U4.77)   -2.9327                   (X_U4.78)    -.1478                       
+
+(X_U4.79)   -5.0000                   (X_U4.80)    3.5000                       
+
+(X_U4.81) 392.3E-15                   (X_U4.82)   -5.0000                       
+
+(X_U4.83)    5.0000                   (X_U4.84)    -.1482                       
+
+(X_U4.85)    -.1482                   (X_U4.86)    -.1482                       
+
+(X_U5.22)-397.2E-06                   (X_U5.23)   -4.9645                       
+
+(X_U5.24)     .0022                   (X_U5.25)     .0022                       
+
+(X_U5.26)     .0022                   (X_U5.27)     .0022                       
+
+(X_U5.28)   72.7920                   (X_U5.29)   16.9270                       
+
+(X_U5.30)   72.7800                   (X_U5.31)     .0182                       
+
+(X_U5.32)   72.7610                   (X_U5.33)    1.5014                       
+
+(X_U5.34)    2.3103                   (X_U5.35)    2.3103                       
+
+(X_U5.36)     .0028                   (X_U5.37) 200.0E-12                       
+
+(X_U5.38)-2.007E-12                   (X_U5.39)-2.007E-12                       
+
+(X_U5.40)-2.008E-12                   (X_U5.41)-2.008E-12                       
+
+(X_U5.42)    3.5103                   (X_U5.43)    3.5103                       
+
+(X_U5.44)    1.1103                   (X_U5.45)    1.1103                       
+
+(X_U5.46)     .0022                   (X_U5.47) 5.000E-06                       
+
+(X_U5.48)     .5000                   (X_U5.49) 398.6E-15                       
+
+(X_U5.50) 137.2E-12                   (X_U5.51)   40.0000                       
+
+(X_U5.52)  -40.0000                   (X_U5.53) 392.3E-15                       
+
+(X_U5.54) 392.3E-15                   (X_U5.55)    3.5103                       
+
+(X_U5.56)    1.1103                   (X_U5.57)  180.0000                       
+
+(X_U5.58) -180.0000                   (X_U5.59)    2.3103                       
+
+(X_U5.60) 392.3E-15                   (X_U5.61) 392.3E-15                       
+
+(X_U5.62) 392.3E-15                   (X_U5.63) 392.3E-15                       
+
+(X_U5.64) 392.3E-15                   (X_U5.65) 392.3E-15                       
+
+(X_U5.66)    3.7860                   (X_U5.67)   -4.3735                       
+
+(X_U5.68)    3.7860                   (X_U5.69)   -4.3735                       
+
+(X_U5.70) 392.3E-15                   (X_U5.71) 392.3E-15                       
+
+(X_U5.72) 392.3E-15                   (X_U5.73) 392.3E-15                       
+
+(X_U5.74) 392.3E-15                   (X_U5.75)     .2250                       
+
+(X_U5.76)    1.5014                   (X_U5.77)    2.3103                       
+
+(X_U5.78)     .0022                   (X_U5.79)   -5.0000                       
+
+(X_U5.80)    3.5000                   (X_U5.81) 392.3E-15                       
+
+(X_U5.82)   -5.0000                   (X_U5.83)    5.0000                       
+
+(X_U5.84)     .0018                   (X_U5.85)     .0018                       
+
+(X_U5.86)     .0018                   (X_U6.22)-397.2E-06                       
+
+(X_U6.23)   -4.9645                   (X_U6.24)     .7530                       
+
+(X_U6.25)     .7530                   (X_U6.26)     .7530                       
+
+(X_U6.27)     .7530                   (X_U6.28)   94.7280                       
+
+(X_U6.29)   22.0280                   (X_U6.30)   94.7120                       
+
+(X_U6.31)     .0237                   (X_U6.32)   94.6880                       
+
+(X_U6.33)    3.1531                   (X_U6.34)    4.2057                       
+
+(X_U6.35)    4.2058                   (X_U6.36)     .0050                       
+
+(X_U6.37)     .7508                   (X_U6.38)-2.007E-12                       
+
+(X_U6.39)-2.007E-12                   (X_U6.40)-2.008E-12                       
+
+(X_U6.41)-2.008E-12                   (X_U6.42)    5.4057                       
+
+(X_U6.43)    5.4057                   (X_U6.44)    3.0057                       
+
+(X_U6.45)    3.0057                   (X_U6.46)     .7530                       
+
+(X_U6.47) 5.000E-06                   (X_U6.48)     .5000                       
+
+(X_U6.49) 23.75E-06                   (X_U6.50)     .5144                       
+
+(X_U6.51)   40.0000                   (X_U6.52)  -40.0000                       
+
+(X_U6.53) 392.4E-15                   (X_U6.54) 392.4E-15                       
+
+(X_U6.55)    5.4057                   (X_U6.56)    3.0057                       
+
+(X_U6.57)  180.0000                   (X_U6.58) -180.0000                       
+
+(X_U6.59)    4.2058                   (X_U6.60) 392.4E-15                       
+
+(X_U6.61) 392.4E-15                   (X_U6.62) 392.4E-15                       
+
+(X_U6.63) 392.4E-15                   (X_U6.64) 392.4E-15                       
+
+(X_U6.65) 392.4E-15                   (X_U6.66)    3.7851                       
+
+(X_U6.67)   -4.3711                   (X_U6.68)    3.7851                       
+
+(X_U6.69)   -4.3711                   (X_U6.70) 392.4E-15                       
+
+(X_U6.71) 392.4E-15                   (X_U6.72) 392.4E-15                       
+
+(X_U6.73) 392.4E-15                   (X_U6.74) 392.4E-15                       
+
+(X_U6.75)     .2400                   (X_U6.76)    3.1531                       
+
+(X_U6.77)    4.2057                   (X_U6.78)     .7530                       
+
+(X_U6.79)   -5.0000                   (X_U6.80)    3.5000                       
+
+(X_U6.81) 392.4E-15                   (X_U6.82)   -5.0000                       
+
+(X_U6.83)    5.0000                   (X_U6.84)     .7526                       
+
+(X_U6.85)     .7526                   (X_U6.86)     .7526                       
+
+(X_U4.CRS)    1.0000                  (X_U4.MID) 392.3E-15                      
+
+(X_U5.CRS)    1.0000                  (X_U5.MID) 392.3E-15                      
+
+(X_U6.CRS)    1.0000                  (X_U6.MID) 392.4E-15                      
+
+(X_U4.ESDn)    -.1478                 (X_U4.ESDp)    -.1500                     
+
+(X_U4.VCLP)   -2.9327                 (X_U5.ESDn)     .0022                     
+
+(X_U5.ESDp) 200.0E-12                 (X_U5.VCLP)    2.3103                     
+
+(X_U6.ESDn)     .7530                 (X_U6.ESDp)     .7508                     
+
+(X_U6.VCLP)    4.2057                 (X_U4.CLAMP)   -2.9327                    
+
+(X_U4.SW_OL) 392.3E-15                (X_U4.VCC_B)    5.0000                    
+
+(X_U4.VEE_B)   -5.0000                (X_U4.VIMON)    -.3900                    
+
+(X_U5.CLAMP)    2.3103                (X_U5.SW_OL) 392.3E-15                    
+
+(X_U5.VCC_B)    5.0000                (X_U5.VEE_B)   -5.0000                    
+
+(X_U5.VIMON)     .2250                (X_U6.CLAMP)    4.2058                    
+
+(X_U6.SW_OL) 392.4E-15                (X_U6.VCC_B)    5.0000                    
+
+(X_U6.VEE_B)   -5.0000                (X_U6.VIMON)     .2400                    
+
+(X_U4.VOUT_S)   -1.6474               (X_U4.VSENSE)   -2.9327                   
+
+(X_U4.Xe_n.3)    0.0000               (X_U4.Xe_n.4)    0.0000                   
+
+(X_U4.Xe_n.5)    0.0000               (X_U4.Xe_n.6)    0.0000                   
+
+(X_U4.Xe_n.7)     .8338               (X_U4.Xe_n.8)     .8338                   
+
+(X_U4.XU1.ZC)   -1.0000               (X_U5.VOUT_S)    1.5014                   
+
+(X_U5.VSENSE)    2.3103               (X_U5.Xe_n.3)    0.0000                   
+
+(X_U5.Xe_n.4)    0.0000               (X_U5.Xe_n.5)    0.0000                   
+
+(X_U5.Xe_n.6)    0.0000               (X_U5.Xe_n.7)     .8338                   
+
+(X_U5.Xe_n.8)     .8338               (X_U5.XU1.ZC)    1.0000                   
+
+(X_U6.VOUT_S)    3.1531               (X_U6.VSENSE)    4.2058                   
+
+(X_U6.Xe_n.3)    0.0000               (X_U6.Xe_n.4)    0.0000                   
+
+(X_U6.Xe_n.5)    0.0000               (X_U6.Xe_n.6)    0.0000                   
+
+(X_U6.Xe_n.7)     .8338               (X_U6.Xe_n.8)     .8338                   
+
+(X_U6.XU1.ZC)    1.0000               (X_U4.VCC_CLP)    3.7761                  
+
+(X_U4.VEE_CLP)   -4.3465              (X_U4.Xi_nn.3)    0.0000                  
+
+(X_U4.Xi_nn.4)    0.0000              (X_U4.Xi_nn.5)    0.0000                  
+
+(X_U4.Xi_nn.6)    0.0000              (X_U4.Xi_nn.7)     .8338                  
+
+(X_U4.Xi_nn.8)     .8338              (X_U4.Xi_np.3)    0.0000                  
+
+(X_U4.Xi_np.4)    0.0000              (X_U4.Xi_np.5)    0.0000                  
+
+(X_U4.Xi_np.6)    0.0000              (X_U4.Xi_np.7)     .8338                  
+
+(X_U4.Xi_np.8)     .8338              (X_U5.VCC_CLP)    3.7860                  
+
+(X_U5.VEE_CLP)   -4.3735              (X_U5.Xi_nn.3)    0.0000                  
+
+(X_U5.Xi_nn.4)    0.0000              (X_U5.Xi_nn.5)    0.0000                  
+
+(X_U5.Xi_nn.6)    0.0000              (X_U5.Xi_nn.7)     .8338                  
+
+(X_U5.Xi_nn.8)     .8338              (X_U5.Xi_np.3)    0.0000                  
+
+(X_U5.Xi_np.4)    0.0000              (X_U5.Xi_np.5)    0.0000                  
+
+(X_U5.Xi_np.6)    0.0000              (X_U5.Xi_np.7)     .8338                  
+
+(X_U5.Xi_np.8)     .8338              (X_U6.VCC_CLP)    3.7851                  
+
+(X_U6.VEE_CLP)   -4.3711              (X_U6.Xi_nn.3)    0.0000                  
+
+(X_U6.Xi_nn.4)    0.0000              (X_U6.Xi_nn.5)    0.0000                  
+
+(X_U6.Xi_nn.6)    0.0000              (X_U6.Xi_nn.7)     .8338                  
+
+(X_U6.Xi_nn.8)     .8338              (X_U6.Xi_np.3)    0.0000                  
+
+(X_U6.Xi_np.4)    0.0000              (X_U6.Xi_np.5)    0.0000                  
+
+(X_U6.Xi_np.6)    0.0000              (X_U6.Xi_np.7)     .8338                  
+
+(X_U6.Xi_np.8)     .8338              (X_U4.CL_CLAMP)   -2.9327                 
+
+(X_U4.XU1.VREF)    -.0400             (X_U4.XU1.VSHF)    -.3500                 
+
+(X_U5.CL_CLAMP)    2.3103             (X_U5.XU1.VREF)    -.0400                 
+
+(X_U5.XU1.VSHF)     .2650             (X_U6.CL_CLAMP)    4.2057                 
+
+(X_U6.XU1.VREF)    -.0400             (X_U6.XU1.VSHF)     .2800                 
+
+(X_U4.CLAW_CLAMP)   -2.9327           (X_U5.CLAW_CLAMP)    2.3103               
+
+(X_U6.CLAW_CLAMP)    4.2057           
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V1        -9.900E-04
+    V_V2         9.150E-04
+    X_U4.V_GRp  -1.800E-10
+    X_U4.V_GRn   1.800E-10
+    X_U4.V_ISCp  -4.000E-11
+    X_U4.V_ISCn   4.000E-11
+    X_U4.V_ORn   0.000E+00
+    X_U4.V11     2.400E-12
+    X_U4.V_ORp   0.000E+00
+    X_U4.V12    -2.400E-12
+    X_U4.V4     -3.900E-04
+    X_U4.VCM_MIN   5.000E-12
+    X_U4.VCM_MAX  -3.500E-12
+    X_U4.V_OS   -2.665E-14
+    X_U5.V_GRp  -1.800E-10
+    X_U5.V_GRn   1.800E-10
+    X_U5.V_ISCp  -4.000E-11
+    X_U5.V_ISCn   4.000E-11
+    X_U5.V_ORn   0.000E+00
+    X_U5.V11     2.400E-12
+    X_U5.V_ORp   0.000E+00
+    X_U5.V12    -2.399E-12
+    X_U5.V4      2.250E-04
+    X_U5.VCM_MIN   5.000E-12
+    X_U5.VCM_MAX  -3.501E-12
+    X_U5.V_OS    2.654E-16
+    X_U6.V_GRp  -1.800E-10
+    X_U6.V_GRn   1.800E-10
+    X_U6.V_ISCp  -4.000E-11
+    X_U6.V_ISCn   4.000E-11
+    X_U6.V_ORn   0.000E+00
+    X_U6.V11     2.401E-12
+    X_U6.V_ORp   0.000E+00
+    X_U6.V12    -2.399E-12
+    X_U6.V4      2.400E-04
+    X_U6.VCM_MIN   5.001E-12
+    X_U6.VCM_MAX  -3.500E-12
+    X_U6.V_OS    7.906E-14
+    X_U4.XU1.V1   0.000E+00
+    X_U5.XU1.V1   0.000E+00
+    X_U6.XU1.V1   0.000E+00
+
+    TOTAL POWER DISSIPATION   9.53E-03  WATTS
+
+Reducing minimum delta to make the circuit converge.
+Reducing minimum delta to make the circuit converge.
+Reducing minimum delta to make the circuit converge.
+Reducing minimum delta to make the circuit converge.
+Reducing minimum delta to make the circuit converge.
+
+
+          JOB CONCLUDED
+
+**** 04/20/26 19:54:10 **** PSpice 25.1.0 (28 January 2026) *** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-s3"  [ D:\dcser\Documents\Universidad\ISE\B2\amp_ins\amp_ins-pspicefiles\schematic1\s3.sim ] 
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =        1.20
+
