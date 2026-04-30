@@ -5,7 +5,7 @@
 //#include "RTC.h"
 #include <stdio.h>
 #include <string.h>
-
+#include "ThCom.h"  // Para acceder a mid_ComQueue
 osThreadId_t tid_Logger;
 
 // Estructura interna para almacenar evento en progreso
@@ -58,6 +58,11 @@ static void guardar_evento_alarma(AlarmEvent_t *event) {
     buffer[15] = 0xFF;
     
     registroDevalor(ALARM_EVENTS_PAGE_ADDR, buffer, ALARM_EVENT_SIZE, &alarm_event_index);
+    
+     guardar_temperatura(event->temperatura);
+    guardar_hora(event->horas, event->minutos, event->segundos);
+    guardar_calidad_aire(event->eco2);
+    guardar_consumo(event->tvoc);
 }
 
 /**
@@ -177,4 +182,21 @@ void Logger(void *argument) {
         
         osThreadYield();
     }
+}
+//Para poder comprobar
+void enviar_historial_eventos(void) {
+    char buffer[512] = {0};
+    uint32_t len = generar_cadena(buffer, sizeof(buffer));
+    
+    // Prepara el mensaje para enviar por UART
+    MSGQUEUE_OBJ_COM_t msgCom;
+    
+    snprintf(msgCom.Mensaje, sizeof(msgCom.Mensaje), 
+             "\n=== HISTORIAL ===\nEventos: %u\n%s===END===\n", 
+             alarm_event_index, buffer);
+    
+    msgCom.TamMens = strlen(msgCom.Mensaje);
+    
+    // Envía a la cola de transmisión
+    osMessageQueuePut(mid_ComQueue, &msgCom, 0U, 0U);
 }

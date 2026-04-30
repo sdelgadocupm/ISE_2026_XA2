@@ -4,6 +4,7 @@
 #include <string.h>
 #include "Recepcion.h"
 #include "UARTManager.h"
+#include "Logger.h"
 
 
 /*----------------------------------------------------------------------------
@@ -127,6 +128,10 @@ void ProcesarTrama(char *buffer) {
 								printf("[RX] ? Consumo es %d\n");
 								consumo = (uint16_t)valor;
                 break;
+            case 8: //mostrar historial
+                 printf("[RX] Comando: Ver historial\n");
+                enviar_historial_eventos();
+              break;
 						default:
 							printf("[RX] ? Unknown command ID: %d\n", id);
                 // ID desconocido

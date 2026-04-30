@@ -33,5 +33,9 @@ void leer_temperatura(void);
 void leer_calidad_aire(void);
 void leer_consumo(void);
 
+
+void registroDevalor(uint16_t direccion, uint8_t *a, uint8_t len, uint8_t *escritura_index);
+void lecturaDeValor(uint16_t direccion, uint8_t* buf_rd, uint8_t len, uint8_t *lectura_index);
+
 uint32_t generar_cadena_medidas(char *out, uint32_t max_len);
 #endif

@@ -166,9 +166,11 @@ void guardar_hora(uint8_t hora,uint8_t minutos,uint8_t segundos )
 /***FUNCION PARA GUARDAR LA CALIDAD DEL AIRE (2 BITS)**/
 void guardar_calidad_aire(uint16_t medida )
 {
-  uint8_t data = medida;
+  uint8_t buf[3];
+    buf[0] = (medida >> 8) & 0xFF;
+    buf[1] = medida & 0xFF;
   
-  registroDevalor(CA_PAGE_ADDR,&data,1,&ca_index);
+  registroDevalor(CA_PAGE_ADDR,&buf,2,&ca_index);
 }
 
 void guardar_consumo(uint16_t medida)
@@ -181,7 +183,7 @@ void guardar_consumo(uint16_t medida)
 
 /************************CREAMOS FUNCIONES PARA LEER LOS VALORES****************/
 
-void leer_medidas(uint16_t *temperatura, uint8_t *calidad_aire, uint16_t *consumo, uint8_t *horas, uint8_t *minutos,uint8_t *segundos)
+void leer_medidas(uint16_t *temperatura, uint16_t *calidad_aire, uint16_t *consumo, uint8_t *horas, uint8_t *minutos,uint8_t *segundos)
 {
   uint8_t buf[3];
   
@@ -196,8 +198,8 @@ void leer_medidas(uint16_t *temperatura, uint8_t *calidad_aire, uint16_t *consum
   *segundos = buf[2];
   
   //leer calidad del aire 
-  lecturaDeValor(CA_PAGE_ADDR,buf,1,&ca_index_r);
-  *calidad_aire = buf[0];
+  lecturaDeValor(CA_PAGE_ADDR,buf,2,&ca_index_r);
+  *calidad_aire = buf[0] << 8 | buf[1];;
   
   //leer consumo 
   lecturaDeValor(CONSUMO_PAGE_ADDR,buf,2,&consumo_index_r);
@@ -206,8 +208,8 @@ void leer_medidas(uint16_t *temperatura, uint8_t *calidad_aire, uint16_t *consum
 
 uint32_t generar_cadena_medidas(char *out, uint32_t max_len)
 {
-  uint16_t t,c;
-  uint8_t ca, h, m,s;
+  uint16_t t,c,ca;
+  uint8_t h, m,s;
   
   if(!out || max_len == 0)
   {

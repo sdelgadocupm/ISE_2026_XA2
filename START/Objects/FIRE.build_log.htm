@@ -1,0 +1,223 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.42.0.0
+Copyright (C) 2025 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: pablo bach upm Flex license: error obtaining information 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.42.0.0
+Toolchain Path:  C:\Users\PcVIP\AppData\Local\Keil_v5\ARM\ARMCC_506\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.42.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.3.0.0
+Dialog DLL:      TCM.DLL V1.56.6.0
+ 
+<h2>Project:</h2>
+C:\Universidad\Alarma_Incendios\START\FIRE.uvprojx
+Project File Date:  04/20/2026
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Users\PcVIP\AppData\Local\Keil_v5\ARM\ARMCC_506\Bin'
+Rebuild target 'Target_1'
+compiling RTX_Config.c...
+compiling rtx_lib.c...
+compiling EventRecorder.c...
+compiling LEDS.c...
+LEDS.h(14): warning:  #1-D: last line of file ends without a newline
+  #endif
+PWM.h(14): warning:  #1-D: last line of file ends without a newline
+  #endif
+LEDS.c: 2 warnings, 0 errors
+compiling PWM.c...
+PWM.h(14): warning:  #1-D: last line of file ends without a newline
+  #endif
+PWM.c(105): warning:  #1-D: last line of file ends without a newline
+  }
+PWM.c: 2 warnings, 0 errors
+compiling stm32f4xx_hal_cortex.c...
+compiling Thread_TEST.c...
+LEDS.h(14): warning:  #1-D: last line of file ends without a newline
+  #endif
+PWM.h(14): warning:  #1-D: last line of file ends without a newline
+  #endif
+Thread_TEST.h(12): warning:  #1-D: last line of file ends without a newline
+  #endif
+Thread_TEST.c: 3 warnings, 0 errors
+compiling main.c...
+LEDS.h(14): warning:  #1-D: last line of file ends without a newline
+  #endif
+PWM.h(14): warning:  #1-D: last line of file ends without a newline
+  #endif
+Thread_TEST.h(12): warning:  #1-D: last line of file ends without a newline
+  #endif
+main.c: 3 warnings, 0 errors
+compiling Memoria.c...
+Memoria.h(36): warning:  #1-D: last line of file ends without a newline
+  #endif
+Memoria.c(62): warning:  #68-D: integer conversion resulted in a change of sign
+    if ((I2C_Event & ARM_I2C_EVENT_TRANSFER_INCOMPLETE) != 0U) return -1;
+Memoria.c(78): warning:  #68-D: integer conversion resulted in a change of sign
+    if ((I2C_Event & ARM_I2C_EVENT_TRANSFER_INCOMPLETE) != 0U) return -1;
+Memoria.c(88): warning:  #68-D: integer conversion resulted in a change of sign
+    if ((I2C_Event & ARM_I2C_EVENT_TRANSFER_INCOMPLETE) != 0U) return -1;
+Memoria.c: 4 warnings, 0 errors
+compiling stm32f4xx_hal_dma.c...
+compiling stm32f4xx_hal_dma_ex.c...
+compiling stm32f4xx_hal.c...
+assembling startup_stm32f429xx.s...
+compiling I2C_STM32F4xx.c...
+compiling stm32f4xx_hal_gpio.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_hal_pwr.c...
+compiling stm32f4xx_hal_rcc_ex.c...
+compiling stm32f4xx_hal_i2c_ex.c...
+compiling stm32f4xx_hal_pwr_ex.c...
+compiling stm32f4xx_hal_tim_ex.c...
+compiling stm32f4xx_hal_rcc.c...
+compiling stm32f4xx_hal_i2c.c...
+compiling stm32f4xx_hal_tim.c...
+linking...
+Program Size: Code=20664 RO-data=908 RW-data=34340 ZI-data=3012  
+".\Objects\FIRE.axf" - 0 Error(s), 14 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.8.0.pack
+                ARM::CMSIS@5.8.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.5.0
+   * Component: Keil RTX5 Variant: Library Version: 5.5.3
+   * Component: I2C Version: 2.4.0
+   * Component: RTOS2 Version: 2.1.3
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.ARM_Compiler.1.6.3.pack
+                Keil::ARM_Compiler@1.6.3
+                Keil ARM Compiler extensions for ARM Compiler 5 and ARM Compiler 6
+   * Component: Event Recorder Variant: DAP Version: 1.4.0
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F4xx_DFP.2.15.0.pack
+                Keil::STM32F4xx_DFP@2.15.0
+                STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
+   * Component: STM32Cube Framework Version: 1.0.0
+   * Component: I2C Version: 2.10
+   * Component: Classic Version: 1.7.9
+   * Component: Common Version: 1.7.9
+   * Component: Cortex Version: 1.7.9
+   * Component: DMA Version: 1.7.9
+   * Component: GPIO Version: 1.7.9
+   * Component: I2C Version: 1.7.9
+   * Component: PWR Version: 1.7.9
+   * Component: RCC Version: 1.7.9
+   * Component: TIM Version: 1.7.9
+   * Component: Startup Version: 2.6.3
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/CMSIS
+  ./RTE/Compiler
+  ./RTE/Device/STM32F429ZITx
+  ./RTE/_Target_1
+  C:/Users/PcVIP/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0/CMSIS/Core/Include
+  C:/Users/PcVIP/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0/CMSIS/Driver/Include
+  C:/Users/PcVIP/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0/CMSIS/RTOS2/Include
+  C:/Users/PcVIP/AppData/Local/Arm/Packs/ARM/CMSIS/5.8.0/CMSIS/RTOS2/RTX/Include
+  C:/Users/PcVIP/AppData/Local/Arm/Packs/Keil/ARM_Compiler/1.6.3/Include
+  C:/Users/PcVIP/AppData/Local/Arm/Packs/Keil/STM32F4xx_DFP/2.15.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+  C:/Users/PcVIP/AppData/Local/Arm/Packs/Keil/STM32F4xx_DFP/2.15.0/Drivers/STM32F4xx_HAL_Driver/Inc
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@5.5.0
+
+   * Component: ARM::CMSIS:RTOS2:Keil RTX5&Library@5.5.3
+      Source file:   CMSIS/RTOS2/RTX/Template/MsgQueue.c
+      Source file:   CMSIS/RTOS2/RTX/Template/main.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Events.c
+      Include file:  CMSIS/RTOS2/RTX/Config/RTX_Config.h
+      Include file:  CMSIS/RTOS2/RTX/Include/rtx_os.h
+      Source file:   CMSIS/RTOS2/RTX/Config/RTX_Config.c
+      Source file:   CMSIS/RTOS2/RTX/Template/MemPool.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Semaphore.c
+      Source file:   CMSIS/RTOS2/RTX/Template/svc_user.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Timer.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Mutex.c
+      Library file:  CMSIS/RTOS2/RTX/Library/ARM/RTX_CM4F.lib
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_lib.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Thread.c
+
+   * Component: CMSIS Driver:I2C(API)@2.4.0
+      Include file:  CMSIS/Driver/Include/Driver_I2C.h
+
+   * Component: CMSIS:RTOS2(API)@2.1.3
+      Include file:  CMSIS/RTOS2/Include/cmsis_os2.h
+
+   * Component: Device:STM32Cube Framework(API)@1.0.0
+
+   * Component: Keil::CMSIS Driver:I2C@2.10
+      Source file:   CMSIS/Driver/I2C_STM32F4xx.c
+
+   * Component: Keil::Compiler&ARM Compiler:Event Recorder&DAP@1.4.0
+      Include file:  Include/EventRecorder.h
+      Source file:   Source/EventRecorder.c
+      Include file:  Config/EventRecorderConf.h
+
+   * Component: Keil::Device:STM32Cube Framework:Classic@1.7.9
+      Include file:  CMSIS/Driver/Config/RTE_Device.h
+      Source file:   MDK/Templates/Src/stm32f4xx_hal_msp.c
+      Include file:  MDK/Templates/Inc/stm32f4xx_hal_conf.h
+      Include file:  MDK/Templates/Inc/stm32f4xx_it.h
+      Source file:   MDK/Templates_LL/Src/main.c
+      Include file:  MDK/Templates/Inc/main.h
+      Include file:  MDK/Templates_LL/Inc/main.h
+      Source file:   MDK/Templates/Src/main.c
+      Source file:   MDK/Templates/Src/stm32f4xx_it.c
+
+   * Component: Keil::Device:STM32Cube HAL:Common@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+      Include file:  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
+
+   * Component: Keil::Device:STM32Cube HAL:Cortex@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+
+   * Component: Keil::Device:STM32Cube HAL:DMA@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+
+   * Component: Keil::Device:STM32Cube HAL:GPIO@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+
+   * Component: Keil::Device:STM32Cube HAL:I2C@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
+
+   * Component: Keil::Device:STM32Cube HAL:PWR@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+
+   * Component: Keil::Device:STM32Cube HAL:RCC@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+
+   * Component: Keil::Device:STM32Cube HAL:TIM@1.7.9
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
+
+   * Component: Keil::Device:Startup@2.6.3
+      Source file:   MDK/Device/Source/ARM/STM32F42xxx_43xxx_OPT.s
+      Source file:   MDK/Device/Source/ARM/STM32F4xx_OTP.s
+      Include file:  Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
+      Source file:   Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/arm/startup_stm32f429xx.s
+      Source file:   Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c
+Build Time Elapsed:  00:00:08
+</pre>
+</body>
+</html>

@@ -29,5 +29,5 @@ extern osThreadId_t tid_Logger;
 void Logger(void *argument);
 int Init_Logger(void);
 uint32_t generar_cadena(char *out, uint32_t max_len);
-
+void enviar_historial_eventos(void);
 #endif

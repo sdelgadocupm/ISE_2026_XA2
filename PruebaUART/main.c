@@ -39,7 +39,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "Memoria.h"
+#include "ThCom.h"
+#include "UARTManager.h"
+#include "Recepcion.h"
+#include "Logger.h""
 #ifdef _RTE_
 #include "RTE_Components.h"             // Component selection
 #endif
@@ -122,7 +126,7 @@ int main(void)
 		Init_ThCom();           // Thread de transmisión
     Init_ThRecep();         // Thread de recepción (crea mid_AlarmQueue)
     UART_SetThreadIds(tid_ThCom, tid_ThRecep);
-    
+    Init_Logger();
 
     Init_Logger();
   /* Create thread functions that start executing, 
@@ -131,7 +135,7 @@ int main(void)
   /* Start thread execution */
   osKernelStart();
 #endif
-
+osDelay(100);
   /* Infinite loop */
   while (1)
   {
