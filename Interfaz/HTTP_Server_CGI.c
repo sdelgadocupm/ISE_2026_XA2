@@ -6,12 +6,15 @@
  * Purpose: HTTP Server CGI Module
  * Rev.:    V6.0.0
  *----------------------------------------------------------------------------*/
-
+#include <stdlib.h> 
 #include <stdio.h>
 #include <string.h>
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #include "rl_net.h"                     // Keil.MDK-Pro::Network:CORE
-
+#include "Logger.h"
+#include "ThCom.h"
+#include "Recepcion.h"
+#include "Memoria.h"
 //#include "Board_LED.h"                  // ::Board Support:LED
 
 #if      defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
@@ -23,10 +26,8 @@
 extern uint16_t AD_in (uint32_t ch);
 //extern uint8_t  get_button (void);
 
-extern bool LEDrun;
-extern char lcd_text[2][20+1];
-extern osThreadId_t TID_Display;
-extern osThreadId_t tid_Thread;
+
+
 
 // Local variables.
 static uint8_t P2;
@@ -36,7 +37,32 @@ extern int adc_value;
 uint32_t volts;
 uint32_t mv_total ;
 uint32_t mvolts ;
-osMessageQueueId_t  mid_MsgQueue_LCD;
+
+
+//Varables necesarias para las medidas
+
+
+extern osMessageQueueId_t mid_ComQueue;
+
+extern uint16_t temp;
+extern uint16_t co2;
+extern uint16_t tvoc;
+extern uint16_t consumo;
+extern uint16_t estado;
+extern uint16_t modo;
+
+
+extern char fecha_actual[11];           // "YYYY-MM-DD"
+extern char hora_actual[9];             // "HH:MM:SS"
+extern char ultima_actualizacion[25];   // "YYYY-MM-DD HH:MM:SS"
+
+static char last_pg[8] = {0};
+
+//Variables para los umbrales
+static float th_temp = 60.0f;
+static int   th_co2  = 1000;
+static int   th_tvoc = 500;
+
 // My structure of CGI status variable.
 typedef struct {
   uint8_t idx;
@@ -114,10 +140,10 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
   }
 
   P2 = 0;
-  LEDrun = true;
+  
   if (len == 0) {
     // No data or all items (radio, checkbox) are off
-    LED_SetOut(P2);
+    
     return;
   }
   passw[0] = 1;
@@ -139,7 +165,7 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
         P2 |= 0x08;
       }
       else if (strcmp (var, "ctrl=Browser") == 0) {
-        LEDrun = false;
+        
       }
       else if ((strncmp (var, "pw0=", 4) == 0) ||
                (strncmp (var, "pw2=", 4) == 0)) {
@@ -156,19 +182,59 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
       }
       else if (strncmp (var, "lcd1=", 5) == 0) {
         // LCD Module line 1 text
-        strncpy (lcd_text[0], var+5,20);
-        lcd_text[0][20]='\0';
-        osThreadFlagsSet (tid_Thread, 0x01);
+       
       }
       else if (strncmp (var, "lcd2=", 5) == 0) {
-        // LCD Module line 2 text
-        strncpy (lcd_text[1], var+5,20);
-        lcd_text[1][20]='\0';
-        osThreadFlagsSet (tid_Thread, 0x01);
+        
+      }else if(strncmp(var, "pg=3", 3) == 0)
+      {
+        strncpy(last_pg, var + 3, sizeof(last_pg)-1);
+          last_pg[sizeof(last_pg)-1] = '\0';
+      }else if(strcmp(var, "cmd=disable_alarm") == 0)
+      {
+        //Enviamos los comando por UART
+        MSGQUEUE_OBJ_COM_t out;
+          snprintf(out.Mensaje,sizeof(out.Mensaje), " 4 1\n");
+        out.TamMens = (uint8_t)strlen(out.Mensaje);
+        osMessageQueuePut(mid_ComQueue,&out, 0U,0U);
+        
+      }else if(strncmp(var, "th_temp=",8) == 0)
+      {
+        th_temp = (float)atof(var + 8);
+         guardar_umbrales(th_temp, th_co2, th_tvoc);
+        
+        MSGQUEUE_OBJ_COM_t out = {0};
+        snprintf(out.Mensaje, sizeof(out.Mensaje), "1 %d\n", (int)(th_temp * 10.0f));
+        out.TamMens = (uint8_t)strlen(out.Mensaje);
+        osMessageQueuePut(mid_ComQueue, &out, 0U, 0U);
+        
+        
+      }else if(strncmp(var, "th_co2=",7) == 0)
+      {
+        th_co2 = (float)atof(var + 7);
+        guardar_umbrales(th_temp, th_co2, th_tvoc);
+        
+        MSGQUEUE_OBJ_COM_t out = {0};
+        snprintf(out.Mensaje, sizeof(out.Mensaje), "2 %d\n", th_co2);
+        out.TamMens = (uint8_t)strlen(out.Mensaje);
+        osMessageQueuePut(mid_ComQueue, &out, 0U, 0U);
+
+        
+      }else if(strncmp(var, "th_tvoc=", 8) == 0)
+      {
+        th_tvoc = atoi(var + 8);
+        th_tvoc = atoi(var + 8);
+        guardar_umbrales(th_temp, th_co2, th_tvoc);
+        
+        MSGQUEUE_OBJ_COM_t out = {0};
+        snprintf(out.Mensaje, sizeof(out.Mensaje), "3 %d\n", th_tvoc);
+        out.TamMens = (uint8_t)strlen(out.Mensaje);
+        osMessageQueuePut(mid_ComQueue, &out, 0U, 0U);
       }
     }
+
   } while (data);
-  LED_SetOut (P2);
+  
 }
 
 // Generate dynamic web data from a script line.
@@ -238,20 +304,7 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       break;
 
     case 'b':
-      // LED control from 'led.cgi'
-      if (env[2] == 'c') {
-        // Select Control
-       len = (uint32_t)sprintf (buf, &env[4], LEDrun ?     ""     : "selected",
-                                               LEDrun ? "selected" :    ""     );
-        break;
-      }
-      // LED CheckBoxes
-      id = env[2] - '0';
-      if (id > 3) {
-        id = 0;
-      }
-      id = (uint8_t)(1U << id);
-      len = (uint32_t)sprintf (buf, &env[4], (P2 & id) ? "checked" : "");
+     
       break;
 
     case 'c':
@@ -329,15 +382,7 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       break;
 
     case 'f':
-      // LCD Module control from 'lcd.cgi'
-      switch (env[2]) {
-        case '1':
-          len = (uint32_t)sprintf (buf, &env[4], lcd_text[0]);
-          break;
-        case '2':
-          len = (uint32_t)sprintf (buf, &env[4], lcd_text[1]);
-          break;
-      }
+
       break;
 						
     case 'g':
@@ -356,7 +401,162 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
           break;
       }
       break;
+      
+        case 's':
+          switch (env[2])
+          {
+            case '1':{
+                const char *cls = "guardian";
+                const char *txt = "GUARDIAN";
+                  if(modo == 1)
+                  {
+                    cls = "pre";
+                    txt = "PREACTIVACION";
+                  }else if(modo == 2)
+                  {
+                    cls = "alarm";
+                    txt = "ACTIVACION";
+                  }
+                  len = (uint32_t)sprintf (buf, &env[4], cls, txt);
+              break;
+            }
+            case 2:
+            {
+              //Vemos el estado de la energia 
+              const char *pwr; 
+              if(modo == 0)
+              {
+                pwr = "Bajo consumo (60s)";
+              }else if(modo == 1)
+              {
+                pwr = "Vigilancia (periodo corto)";
+              }else 
+              {
+                pwr = "Alarma activa";
+              }
+              len = (uint32_t)sprintf(buf, &env[4], pwr);
+              break;
+            }
+            case 3: //Consumo de la Energia (?mA¿)
+            {
+              float cons = (float)consumo;
+              len = (uint32_t)sprintf(buf, &env[4], consumo);
+              break;
+            }
+            case 4: //Ultima_actualizacion
+              len = (uint32_t)sprintf(buf, &env[4], ultima_actualizacion);
+              break;
+              case '5':
+              len = (uint32_t)sprintf(buf, &env[4], fecha_actual);
+              break;
+            case '6':
+                len = (uint32_t)sprintf(buf, &env[4], hora_actual);
+              break;
+            case '7': {
+               float t = ((float)temp) / 10.0f ;
+                len = (uint32_t)sprintf(buf, &env[4], t);
+          break;
+            }
+            case '8':
+              len = (uint32_t)sprintf(buf, &env[4], (int)co2); 
+              break;
+              case '9':
+              len = (uint32_t)sprintf(buf, &env[4], (int)tvoc); 
+              break;
+            }
+          
+            break;
+              case 'k':
+                switch(env[2])
+                {
+                  case '1' : 
+                    len = (uint32_t)sprintf(buf, &env[4], (int)th_temp); 
+                    break;
+                   case '2' : 
+                    len = (uint32_t)sprintf(buf, &env[4], (int)th_co2); 
+                    break;
+                    case '3' : 
+                    len = (uint32_t)sprintf(buf, &env[4], (int)th_tvoc); 
+                    break;
+                }
+                break;
+                    case 'h':
+                    {
+                      AlarmEvent_t medidas;
+                      uint16_t write_idx = Logger_GetWriteIndex(); //para sacar el indice 
+                      uint16_t mensajes;
+                      
+                      int32_t  idx = (int32_t)write_idx -1;
+                      
+                       if(idx < 0)
+                       {
+                         idx = (int32_t)MAX_ALARM_EVENTS - 1; //Que vaya rellenado 
+                       }                         
+                      while(mensajes < 20)
+                      {
+                        if(Logger_ReadEvent((uint16_t)idx,&medidas))
+                        {
+                          char actualizacion[16];
+                          snprintf(actualizacion, sizeof(actualizacion),"%02u:%02u:%02u", medidas.hora_activacion,medidas.minuto_activacion,medidas.segundo_activacion);
+                        
+                          char desactivacion[16];
+                              if (medidas.tipo_desactivacion == 0xFF) {
+                              strcpy(desactivacion, "---");
+                                } else {
+                                      snprintf(desactivacion, sizeof(desactivacion), "%02u:%02u:%02u", medidas.hora_desac, medidas.minuto_desac, medidas.segundo_desac);
+                                }
+                          char metodo[32];
+                                if(medidas.tipo_desactivacion == 0)
+                                {
+                                  snprintf(metodo,sizeof(metodo), "RIFD %02X%02X%02X%02X", medidas.rfid[0],  medidas.rfid[1], medidas.rfid[2], medidas.rfid[3]);
+                                  
+                                }else if(medidas.tipo_desactivacion == 1)
+                                {
+                                  snprintf(metodo,sizeof(metodo),"REMOTO");
+                                  
+                                }else
+                                {
+                                   snprintf(metodo,sizeof(metodo),"PENDIENTE");
+                                }
+                                float t = ((float)medidas.temperatura) / 10.0f;
 
+                              if ((len + 240) >= buflen) {
+                                    len |= (1u << 31);
+                                break;
+                                }
+                              
+                                len +=  (uint32_t)sprintf(buf + len,
+                                          "<tr>"
+                                          "<td>%u</td>"
+                                          "<td>%s</td>"
+                                          "<td>%.1f</td>"
+                                          "<td>%u</td>"
+                                          "<td>%u</td>"
+                                          "<td>%s</td>"
+                                          "<td>%s</td>"
+                                            "</tr>\r\n",
+                                        (unsigned)(mensajes + 1),
+                                        actualizacion,
+                                          t,
+                                        (unsigned)medidas.eco2,
+                                          (unsigned)medidas.tvoc,
+                                        desactivacion,
+                                      metodo );
+                                          mensajes++;
+                                        }
+                                          idx--;
+                          if(idx < 0)
+                          {
+                            idx = (int32_t)MAX_ALARM_EVENTS - 1;
+                          }
+                          if ((uint16_t)idx == write_idx)
+                          {
+                            break;
+                          }
+                        }
+                      break;
+                    }
+                  
     case 'x':
       // AD Input from 'ad.cgx'
       adv = AD_in (0);
