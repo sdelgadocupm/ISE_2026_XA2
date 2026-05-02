@@ -8,12 +8,18 @@
 
 #define EEPROM_I2C_ADDR 0x50 //Direccion de la memoria
 #define EEPROM_PAGE_SIZE      64u
+#define EEPROM_TOTAL_SIZE     32768u
 #define MAX_ENTRIES_DEFAULT   10u
 
 #define TEMPERATURE_PAGE_ADDR      0x0000  // Página 0
 #define HORA_PAGE_ADDR      0x0040  // Página 1
 #define CA_PAGE_ADDR      0x0080  // Página 2
 #define CONSUMO_PAGE_ADDR      0x00C0  // Página 3
+
+// ========== EVENTOS HISTÓRICOS (0x0800 - 0x5FFF: 20KB) ==========
+#define ALARM_EVENTS_PAGE_ADDR   0x0800
+#define ALARM_EVENT_SIZE         19       
+#define MAX_ALARM_EVENTS         1150     // (20KB / 19)
 
 extern bool completo;
 

@@ -6,21 +6,87 @@
 #include <stdio.h>
 #include <string.h>
 #include "ThCom.h"  // Para acceder a mid_ComQueue
+
 osThreadId_t tid_Logger;
 
 // Estructura interna para almacenar evento en progreso
 static AlarmEvent_t current_alarm;
 static bool alarma_en_progreso = false;
+static uint16_t alarm_event_index = 0;
 
-// Direcciones EEPROM
-#define ALARM_EVENTS_PAGE_ADDR    0x2000
-#define ALARM_EVENT_SIZE         16
-#define MAX_ALARM_EVENTS         20
 
-static uint8_t alarm_event_index = 0;
+static int EEPROM_Write_Abs(uint16_t addr, uint8_t *data, uint32_t len) {
+    uint8_t wr_buffer[2 + len];
+    
+    wr_buffer[0] = (addr >> 8) & 0xFF;  // MSB
+    wr_buffer[1] = addr & 0xFF;         // LSB
+    memcpy(&wr_buffer[2], data, len);
+    
+    EEPROM_Write_Event(wr_buffer, 2 + len);
+    osDelay(5);
+    return 0;
+}
+
+/**
+ * @brief Lee datos de EEPROM en dirección absoluta (SIN usar lecturaDeValor)
+ */
+
+static int EEPROM_Read_Abs(uint16_t addr, uint8_t *data, uint32_t len) {
+    uint8_t rd_addr[2];
+    
+    rd_addr[0] = (addr >> 8) & 0xFF;
+    rd_addr[1] = addr & 0xFF;
+    
+    EEPROM_Read_Event(rd_addr, data, len);
+    return 0;
+}
+
+static uint16_t get_alarm_event_count(void) {
+    // Contar cuántos eventos válidos hay realmente
+    uint8_t buffer[ALARM_EVENT_SIZE];
+    uint16_t count = 0;
+    
+    for (uint16_t i = 0; i < MAX_ALARM_EVENTS; i++) {
+        uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (i * ALARM_EVENT_SIZE);
+        EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
+        
+        if (buffer[0] == 0xAA) {
+            count++;
+        } else if (buffer[0] == 0xFF) {
+            break;  // Fin de eventos válidos
+        }
+    }
+    
+    return count;
+}
+
+
+
+static uint16_t recuperar_alarm_event_index(void) {
+uint8_t buffer[ALARM_EVENT_SIZE];
+    
+    // Buscar el PRIMER slot vacío (0xFF en validación)
+    for (uint16_t i = 0; i < MAX_ALARM_EVENTS; i++) {
+        uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (i * ALARM_EVENT_SIZE);
+        EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
+        
+        // Si encontramos slot vacío, ese es el siguiente índice
+        if (buffer[0] != 0xAA) {
+            return i;  // Retorna posición del siguiente a escribir
+        }
+    }
+    
+    // Si llegamos aquí, la EEPROM está llena
+    return 0;  // Ring buffer: vuelve al inicio
+}
 
 // INICIALIZACIÓN DEL THREAD
 int Init_Logger(void) {
+	 
+	  alarm_event_index = recuperar_alarm_event_index();
+    memset(&current_alarm, 0, sizeof(AlarmEvent_t));
+    alarma_en_progreso = false;
+	
     tid_Logger = osThreadNew(Logger, NULL, NULL);
     if (tid_Logger == NULL) {
         return(-1);
@@ -30,7 +96,7 @@ int Init_Logger(void) {
 }
 
 //Guarda un evento de alarma completo en EEPROM
- 
+
 static void guardar_evento_alarma(AlarmEvent_t *event) {
     if (alarm_event_index >= MAX_ALARM_EVENTS) {
         alarm_event_index = 0;
@@ -40,163 +106,148 @@ static void guardar_evento_alarma(AlarmEvent_t *event) {
     uint8_t buffer[ALARM_EVENT_SIZE];
     
     // Empaquetar datos
-    buffer[0] = (event->temperatura >> 8) & 0xFF;
-    buffer[1] = event->temperatura & 0xFF;
-    buffer[2] = (event->eco2 >> 8) & 0xFF;
-    buffer[3] = event->eco2 & 0xFF;
-    buffer[4] = (event->tvoc >> 8) & 0xFF;
-    buffer[5] = event->tvoc & 0xFF;
-    buffer[6] = event->horas;
-    buffer[7] = event->minutos;
-    buffer[8] = event->segundos;
-    buffer[9] = event->tipo_desactivacion;
-    buffer[10] = event->rfid[0];
-    buffer[11] = event->rfid[1];
-    buffer[12] = event->rfid[2];
-    buffer[13] = event->rfid[3];
-    buffer[14] = 0xFF;
-    buffer[15] = 0xFF;
+		buffer[0] = 0xAA;  // VÁLIDO
+    buffer[1] = (event->temperatura >> 8) & 0xFF;
+    buffer[2] = event->temperatura & 0xFF;
+    buffer[3] = (event->eco2 >> 8) & 0xFF;
+    buffer[4] = event->eco2 & 0xFF;
+    buffer[5] = (event->tvoc >> 8) & 0xFF;
+    buffer[6] = event->tvoc & 0xFF;
+    buffer[7] = event->hora_activacion;
+    buffer[8] = event->minuto_activacion;
+    buffer[9] = event->segundo_activacion;
+    buffer[10] = event->hora_desac;
+    buffer[11] = event->minuto_desac;
+    buffer[12] = event->segundo_desac;
+    buffer[13] = event->tipo_desactivacion;
+    buffer[14] = event->rfid[0];
+    buffer[15] = event->rfid[1];
+    buffer[16] = event->rfid[2];
+    buffer[17] = event->rfid[3];
+    buffer[18] = 0xFF;
     
-    registroDevalor(ALARM_EVENTS_PAGE_ADDR, buffer, ALARM_EVENT_SIZE, &alarm_event_index);
-    
-     guardar_temperatura(event->temperatura);
-    guardar_hora(event->horas, event->minutos, event->segundos);
-    guardar_calidad_aire(event->eco2);
-    guardar_consumo(event->tvoc);
+		EEPROM_Write_Abs(addr, buffer, ALARM_EVENT_SIZE);
+    osDelay(10); 
+    alarm_event_index++;
 }
 
 /**
  * @brief Lee un evento de la EEPROM
  */
-static void leer_evento_alarma_master(uint8_t index, AlarmEvent_t *event) {
-    if (index >= alarm_event_index) {
+static void leer_evento_alarma_master(uint16_t index, AlarmEvent_t *event) {
+    if (index >= MAX_ALARM_EVENTS) {
+				memset(event, 0, sizeof(AlarmEvent_t));
         return;
     }
-    
+		
+    uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (index * ALARM_EVENT_SIZE);
     uint8_t buffer[ALARM_EVENT_SIZE];
-    uint8_t temp_index = index;
+
     
     // Usar función de Memoria.c
-    lecturaDeValor(ALARM_EVENTS_PAGE_ADDR, buffer, ALARM_EVENT_SIZE, &temp_index);
+    EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
     
-    // Desempaquetar
-    event->temperatura = (buffer[0] << 8) | buffer[1];
-    event->eco2 = (buffer[2] << 8) | buffer[3];
-    event->tvoc = (buffer[4] << 8) | buffer[5];
-    event->horas = buffer[6];
-    event->minutos = buffer[7];
-    event->segundos = buffer[8];
-    event->tipo_desactivacion = buffer[9];
-    event->rfid[0] = buffer[10];
-    event->rfid[1] = buffer[11];
-    event->rfid[2] = buffer[12];
-    event->rfid[3] = buffer[13];
-}
-
-//Genera cadena historial
-
-uint32_t generar_cadena(char *out, uint32_t max_len) {
-    if (!out || max_len == 0) {
-        return 0;
+		if (buffer[0] != 0xAA) {
+        memset(event, 0, sizeof(AlarmEvent_t));
+        return;
     }
-    
-    uint32_t total_len = 0;
-    AlarmEvent_t event;
-    
-    for (uint8_t i = 0; i < alarm_event_index; i++) {
-        leer_evento_alarma_master(i, &event);
-        
-        const char *tipo = (event.tipo_desactivacion == 0) ? "RFID" : 
-                          (event.tipo_desactivacion == 1) ? "REMOTO" : "PENDIENTE";
-        char rfid_str[12] = {0};
-        
-        if (event.tipo_desactivacion == 0) {
-            snprintf(rfid_str, sizeof(rfid_str), "%02X%02X%02X%02X",
-         event.rfid[0], event.rfid[1], event.rfid[2], event.rfid[3]);
-        } else if (event.tipo_desactivacion == 1) {
-            snprintf(rfid_str, sizeof(rfid_str), "N/A");
-        } else {
-            snprintf(rfid_str, sizeof(rfid_str), "PENDIENTE");
-        }
-        
-        int n = snprintf(out + total_len, max_len - total_len,
-                        "%u;%u;%u;%02u:%02u:%02u;%s;%s\n",
-                        event.temperatura, event.eco2, event.tvoc,
-                        event.horas, event.minutos, event.segundos,
-                        tipo, rfid_str);
-        
-        if (n < 0 || (total_len + n) >= max_len) {
-            break;
-        }
-        
-        total_len += n;
-    }
-    
-    return total_len;
+
+		// Desempaquetar
+		event->validacion = buffer[0];
+    event->temperatura = ((uint16_t)buffer[1] << 8) | buffer[2];
+    event->eco2 = ((uint16_t)buffer[3] << 8) | buffer[4];
+    event->tvoc = ((uint16_t)buffer[5] << 8) | buffer[6];
+    event->hora_activacion = buffer[7];
+    event->minuto_activacion = buffer[8];
+    event->segundo_activacion = buffer[9];
+    event->hora_desac = buffer[10];
+    event->minuto_desac = buffer[11];
+    event->segundo_desac = buffer[12];
+    event->tipo_desactivacion = buffer[13];
+    event->rfid[0] = buffer[14];
+    event->rfid[1] = buffer[15];
+    event->rfid[2] = buffer[16];
+    event->rfid[3] = buffer[17];
 }
-
-
 /**
  * @brief Thread principal
  */
 void Logger(void *argument) {
     MSGQUEUE_ALARM_t msg;
-    //RTC_TimeTypeDef rtc_time;
-
     
     while (1) {
         osStatus_t status = osMessageQueueGet(mid_AlarmQueue, &msg, NULL, osWaitForever);
         
         if (status == osOK) {
-            if (msg.tipo_evento == ALARM_ACTIVATION) {
+            if (msg.tipo_evento == 0) {
                 // ACTIVACIÓN
+                printf("[Logger] ??  ALARMA ACTIVADA\n");
+                printf("  Temp: %u (0.1°C), eCO2: %u ppm, TVOC: %u ppb\n", 
+                       msg.temperatura, msg.eco2, msg.tvoc);
+                printf("  RFID: %02X%02X%02X%02X\n", 
+                       msg.rfid[0], msg.rfid[1], msg.rfid[2], msg.rfid[3]);
+                
                 memset(current_alarm.rfid, 0, 4);
-							
-                //RTC_GetTime(&rtc_time);
                 
                 current_alarm.temperatura = msg.temperatura;
                 current_alarm.eco2 = msg.eco2;
                 current_alarm.tvoc = msg.tvoc;
-                //current_alarm.horas = rtc_time.Hours;
-                //current_alarm.minutos = rtc_time.Minutes;
-                //current_alarm.segundos = rtc_time.Seconds;
                 current_alarm.tipo_desactivacion = 0xFF;
                 memcpy(current_alarm.rfid, msg.rfid, 4);
                 
                 alarma_en_progreso = true;
                 
-            } else if (msg.tipo_evento == ALARM_DEACTIVATION && alarma_en_progreso) {
+            } else if (msg.tipo_evento == 1 && alarma_en_progreso) {
                 // DESACTIVACIÓN
-								if(msg.rfid[0] == 0 && msg.rfid[1] == 0 && 
+                if(msg.rfid[0] == 0 && msg.rfid[1] == 0 && 
                    msg.rfid[2] == 0 && msg.rfid[3] == 0){
-									current_alarm.tipo_desactivacion = 1;
-								}else{
-									memcpy(current_alarm.rfid, msg.rfid, 4);
-									current_alarm.tipo_desactivacion = 0;
-								}
+                    current_alarm.tipo_desactivacion = 1;
+                }else{
+                    memcpy(current_alarm.rfid, msg.rfid, 4);
+                    current_alarm.tipo_desactivacion = 0;
+                }
                 
                 guardar_evento_alarma(&current_alarm);
                 alarma_en_progreso = false;
+								
+								uint8_t buffer[ALARM_EVENT_SIZE];
+                uint16_t eventos_validos = 0;
+								for (uint16_t i = 0; i < MAX_ALARM_EVENTS; i++) {
+                    uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (i * ALARM_EVENT_SIZE);
+                    EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
+                    
+                    if (buffer[0] == 0xAA) {
+                        eventos_validos++;
+                        uint16_t temp = ((uint16_t)buffer[1] << 8) | buffer[2];
+                        uint16_t co2 = ((uint16_t)buffer[3] << 8) | buffer[4];
+                        uint16_t tvoc = ((uint16_t)buffer[5] << 8) | buffer[6];
+                        uint8_t h_act = buffer[7];
+                        uint8_t m_act = buffer[8];
+                        uint8_t s_act = buffer[9];
+                        uint8_t h_desac = buffer[10];
+                        uint8_t m_desac = buffer[11];
+                        uint8_t s_desac = buffer[12];
+                        uint8_t tipo_desac = buffer[13];
+                        uint8_t rfid0 = buffer[14];
+                        uint8_t rfid1 = buffer[15];
+                        uint8_t rfid2 = buffer[16];
+                        uint8_t rfid3 = buffer[17];
+                        
+                        const char *tipo = (tipo_desac == 0) ? "RFID" : (tipo_desac == 1) ? "REMOTO" : "PENDING";
+                        
+                        printf("[%2u] %02u:%02u:%02u -> %02u:%02u:%02u | T=%u CO2=%u TVOC=%u | %s %02X%02X%02X%02X\n",
+                               i, h_act, m_act, s_act, h_desac, m_desac, s_desac, 
+                               temp, co2, tvoc, tipo, rfid0, rfid1, rfid2, rfid3);
+                    } else if (buffer[0] == 0xFF) {
+                        break;
+                    }
+                }
+                
+                printf("Total: %u eventos\n", eventos_validos);
+                printf("==================================\n\n");
             }
         }
         
         osThreadYield();
     }
-}
-//Para poder comprobar
-void enviar_historial_eventos(void) {
-    char buffer[512] = {0};
-    uint32_t len = generar_cadena(buffer, sizeof(buffer));
-    
-    // Prepara el mensaje para enviar por UART
-    MSGQUEUE_OBJ_COM_t msgCom;
-    
-    snprintf(msgCom.Mensaje, sizeof(msgCom.Mensaje), 
-             "\n=== HISTORIAL ===\nEventos: %u\n%s===END===\n", 
-             alarm_event_index, buffer);
-    
-    msgCom.TamMens = strlen(msgCom.Mensaje);
-    
-    // Envía a la cola de transmisión
-    osMessageQueuePut(mid_ComQueue, &msgCom, 0U, 0U);
 }

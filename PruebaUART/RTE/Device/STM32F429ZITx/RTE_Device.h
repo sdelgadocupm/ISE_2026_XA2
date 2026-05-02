@@ -1153,7 +1153,7 @@
 
 // <e> I2C3 (Inter-integrated Circuit Interface 3) [Driver_I2C3]
 // <i> Configuration settings for Driver_I2C3 in component ::CMSIS Driver:I2C
-#define RTE_I2C3                        1
+#define RTE_I2C3                        0
 
 //   <o> I2C3_SCL Pin <0=>PH7 <1=>PA8
 #define RTE_I2C3_SCL_PORT_ID            0

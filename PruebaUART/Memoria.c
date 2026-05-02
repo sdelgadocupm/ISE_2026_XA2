@@ -228,10 +228,3 @@ uint32_t generar_cadena_medidas(char *out, uint32_t max_len)
   
 }
 
-
-
-
-
-
-
-

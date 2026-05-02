@@ -55,7 +55,7 @@ void debug_memoria(void)
   
   leer_medidas(&t, &ca, &c, &h, &m, &s);
   
-   printf("\r\n===== EEPROM DEBUG =====\r\n");
+  printf("\r\n===== EEPROM DEBUG =====\r\n");
   printf("Temperatura: %u\r\n", t);
   printf("Calidad Aire: %u\r\n", ca);
   printf("Consumo: %u\r\n", c);

@@ -43,7 +43,7 @@
 #include "ThCom.h"
 #include "UARTManager.h"
 #include "Recepcion.h"
-#include "Logger.h""
+#include "Logger.h"
 #ifdef _RTE_
 #include "RTE_Components.h"             // Component selection
 #endif
@@ -128,7 +128,6 @@ int main(void)
     UART_SetThreadIds(tid_ThCom, tid_ThRecep);
     Init_Logger();
 
-    Init_Logger();
   /* Create thread functions that start executing, 
   Example: osThreadNew(app_main, NULL, NULL); */
 
