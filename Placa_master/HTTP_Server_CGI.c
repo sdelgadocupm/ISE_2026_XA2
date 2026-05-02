@@ -15,6 +15,7 @@
 #include "ThCom.h"
 #include "Recepcion.h"
 #include "Memoria.h"
+#include "Master.h"
 //#include "Board_LED.h"                  // ::Board Support:LED
 
 #if      defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
@@ -52,16 +53,11 @@ extern uint16_t estado;
 extern uint16_t modo;
 
 
-extern char fecha_actual[11];           // "YYYY-MM-DD"
-extern char hora_actual[9];             // "HH:MM:SS"
-extern char ultima_actualizacion[25];   // "YYYY-MM-DD HH:MM:SS"
+//extern char fecha_actual[11];           // "YYYY-MM-DD"
+//extern char hora_actual[9];             // "HH:MM:SS"
+extern char ultima_actualizacion[25];   // "YYYY-MM-DD HH:MM:SS" no se de donde sale pero esta en la web
 
 static char last_pg[8] = {0};
-
-//Variables para los umbrales
-static float th_temp = 60.0f;
-static int   th_co2  = 1000;
-static int   th_tvoc = 500;
 
 // My structure of CGI status variable.
 typedef struct {
@@ -202,36 +198,21 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
       {
         th_temp = (float)atof(var + 8);
          guardar_umbrales(th_temp, th_co2, th_tvoc);
-        
-        MSGQUEUE_OBJ_COM_t out = {0};
-        snprintf(out.Mensaje, sizeof(out.Mensaje), "1 %d\n", (int)(th_temp * 10.0f));
-        out.TamMens = (uint8_t)strlen(out.Mensaje);
-        osMessageQueuePut(mid_ComQueue, &out, 0U, 0U);
-        
-        
+        Master_confirm();
+
       }else if(strncmp(var, "th_co2=",7) == 0)
       {
         th_co2 = (float)atof(var + 7);
         guardar_umbrales(th_temp, th_co2, th_tvoc);
-        
-        MSGQUEUE_OBJ_COM_t out = {0};
-        snprintf(out.Mensaje, sizeof(out.Mensaje), "2 %d\n", th_co2);
-        out.TamMens = (uint8_t)strlen(out.Mensaje);
-        osMessageQueuePut(mid_ComQueue, &out, 0U, 0U);
+        Master_confirm();
 
-        
       }else if(strncmp(var, "th_tvoc=", 8) == 0)
       {
         th_tvoc = atoi(var + 8);
-        th_tvoc = atoi(var + 8);
         guardar_umbrales(th_temp, th_co2, th_tvoc);
-        
-        MSGQUEUE_OBJ_COM_t out = {0};
-        snprintf(out.Mensaje, sizeof(out.Mensaje), "3 %d\n", th_tvoc);
-        out.TamMens = (uint8_t)strlen(out.Mensaje);
-        osMessageQueuePut(mid_ComQueue, &out, 0U, 0U);
-      }
+        Master_confirm();
     }
+  }
 
   } while (data);
   
@@ -385,22 +366,22 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 
       break;
 						
-    case 'g':
-      // AD Input from 'ad.cgi'
-      switch (env[2]) {
-        case '1':
-          adv = AD_in(0);
-          len = (uint32_t)sprintf (buf, &env[4], adv);
-          break;
-				case '2':
-          len = (uint32_t)sprintf (buf, &env[4], (double)((float)adv*3.3f)/4096);
-          break;
-        case '3':
-          adv = (adv * 100) / 4096;
-          len = (uint32_t)sprintf (buf, &env[4], adv);
-          break;
-      }
-      break;
+//    case 'g':
+//      // AD Input from 'ad.cgi'
+//      switch (env[2]) {
+//        case '1':
+////          adv = AD_in(0);
+//          len = (uint32_t)sprintf (buf, &env[4], adv);
+//          break;
+//				case '2':
+//          len = (uint32_t)sprintf (buf, &env[4], (double)((float)adv*3.3f)/4096);
+//          break;
+//        case '3':
+//          adv = (adv * 100) / 4096;
+//          len = (uint32_t)sprintf (buf, &env[4], adv);
+//          break;
+//      }
+//      break;
       
         case 's':
           switch (env[2])
@@ -444,13 +425,13 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
               break;
             }
             case 4: //Ultima_actualizacion
-              len = (uint32_t)sprintf(buf, &env[4], ultima_actualizacion);
+//              len = (uint32_t)sprintf(buf, &env[4], ultima_actualizacion);
               break;
               case '5':
-              len = (uint32_t)sprintf(buf, &env[4], fecha_actual);
+//              len = (uint32_t)sprintf(buf, &env[4], fecha_actual);
               break;
             case '6':
-                len = (uint32_t)sprintf(buf, &env[4], hora_actual);
+//                len = (uint32_t)sprintf(buf, &env[4], hora_actual);
               break;
             case '7': {
                float t = ((float)temp) / 10.0f ;
@@ -557,11 +538,11 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
                       break;
                     }
                   
-    case 'x':
-      // AD Input from 'ad.cgx'
-      adv = AD_in (0);
-      len = (uint32_t)sprintf (buf, &env[1], adv);
-      break;
+//    case 'x':
+//      // AD Input from 'ad.cgx'
+//      adv = AD_in (0);
+//      len = (uint32_t)sprintf (buf, &env[1], adv);
+//      break;
 
   }
   return (len);

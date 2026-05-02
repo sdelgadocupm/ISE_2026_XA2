@@ -5,9 +5,10 @@
 <h2>Tool Versions:</h2>
 IDE-Version: µVision V5.42.0.0
 Copyright (C) 2025 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: pablo bach upm Flex license: error obtaining information 
+License Information: pablo bach upm Flex license: MDK Professional 5.42 (Flex) (mdk_pro) Operation stops: 24 Jan 2027
+ 
 Tool Versions:
-Toolchain:       MDK-Lite  Version: 5.42.0.0
+Toolchain:       MDK Professional 5.42 (Flex)  Version: 5.42.0.0
 Toolchain Path:  C:\Users\PcVIP\AppData\Local\Keil_v5\ARM\ARMCC_506\Bin
 C Compiler:      Armcc.exe V5.06 update 7 (build 960)
 Assembler:       Armasm.exe V5.06 update 7 (build 960)
@@ -20,7 +21,7 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.3.0.0
 Dialog DLL:      TCM.DLL V1.56.6.0
  
 <h2>Project:</h2>
-C:\Universidad\Alarma_Incendios\Interfaz\HTTP_Server.uvprojx
+C:\Universidad\Alarma_Incendios\Placa_master\HTTP_Server.uvprojx
 Project File Date:  05/02/2026
 
 <h2>Output:</h2>
@@ -56,11 +57,64 @@ custom translating @.\Auto_FcArm_Cmd.inp...
 Custom: C:\Users\PcVIP\AppData\Local\Keil_v5\ARM\Bin\FCARM.exe @.\Auto_FcArm_Cmd.inp
 FCARM FILE CONVERTER V2.59
 Completed 23 File(s), Ratio 87%
-Error #602: 'Keil::Network&MDK-Pro:CORE&IPv4/IPv6 Debug@7.15.0': component requires valid MDK-ARM Professional license
-Error #602: 'Keil::Network&MDK-Pro:Interface:ETH@7.15.0': component requires valid MDK-ARM Professional license
-Error #602: 'Keil::Network&MDK-Pro:Service:Web Server Compact&HTTP@7.15.0': component requires valid MDK-ARM Professional license
-Error #602: 'Keil::Network&MDK-Pro:Socket:TCP@7.15.0': component requires valid MDK-ARM Professional license
-Error #602: 'Keil::Network&MDK-Pro:Socket:UDP@7.15.0': component requires valid MDK-ARM Professional license
+compiling HTTP_Server.c...
+compiling main.c...
+compiling Web.c...
+assembling irq_armv7m.s...
+compiling UARTManager.c...
+compiling Master.c...
+compiling ThRecepcion.c...
+compiling Logger.c...
+compiling rtx_delay.c...
+compiling ThCom.c...
+compiling Memoria.c...
+compiling HTTP_Server_CGI.c...
+compiling rtx_evflags.c...
+compiling rtx_evr.c...
+compiling rtx_lib.c...
+compiling rtx_kernel.c...
+compiling rtx_memory.c...
+compiling rtx_mempool.c...
+compiling rtx_system.c...
+compiling rtx_semaphore.c...
+compiling rtx_mutex.c...
+compiling rtx_msgqueue.c...
+compiling PHY_LAN8742A.c...
+compiling RTX_Config.c...
+compiling os_systick.c...
+compiling rtx_thread.c...
+compiling rtx_timer.c...
+compiling EMAC_STM32F4xx.c...
+compiling I2C_STM32F4xx.c...
+compiling EventRecorder.c...
+compiling stm32f4xx_hal.c...
+compiling SPI_STM32F4xx.c...
+compiling USART_STM32F4xx.c...
+compiling stm32f4xx_hal_adc.c...
+compiling stm32f4xx_hal_dma.c...
+compiling stm32f4xx_hal_dma_ex.c...
+compiling stm32f4xx_hal_cortex.c...
+compiling stm32f4xx_hal_adc_ex.c...
+compiling stm32f4xx_hal_gpio.c...
+compiling stm32f4xx_hal_pwr.c...
+compiling stm32f4xx_hal_i2c_ex.c...
+compiling stm32f4xx_hal_pwr_ex.c...
+compiling stm32f4xx_hal_rcc.c...
+compiling stm32f4xx_hal_i2c.c...
+assembling startup_stm32f429xx.s...
+compiling stm32f4xx_hal_rcc_ex.c...
+compiling stm32f4xx_hal_sram.c...
+compiling stm32f4xx_hal_spi.c...
+compiling Net_Config.c...
+compiling stm32f4xx_hal_tim_ex.c...
+compiling Net_Debug.c...
+compiling stm32f4xx_hal_usart.c...
+compiling system_stm32f4xx.c...
+compiling stm32f4xx_ll_fmc.c...
+compiling stm32f4xx_hal_tim.c...
+linking...
+Program Size: Code=100928 RO-data=31028 RW-data=34796 ZI-data=29512  
+".\Debug\HTTP_Server.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -68,6 +122,7 @@ Package Vendor: ARM
                 http://www.keil.com/pack/ARM.CMSIS.5.8.0.pack
                 ARM::CMSIS@5.8.0
                 CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: Custom Version: 1.0.0
    * Component: CORE Version: 5.5.0
    * Component: Keil RTX5 Variant: Source Version: 5.5.3
    * Component: Ethernet MAC Version: 2.2.0
@@ -140,35 +195,39 @@ Package Vendor: Keil
 
 <h2>Collection of Component Files used:</h2>
 
+   * Component: ARM::CMSIS Driver:USART:Custom@1.0.0
+      Include file:  CMSIS/Driver/Include/Driver_USART.h
+      Source file:   CMSIS/Driver/DriverTemplates/Driver_USART.c
+
    * Component: ARM::CMSIS:CORE@5.5.0
 
    * Component: ARM::CMSIS:RTOS2:Keil RTX5&Source@5.5.3
-      Include file:  CMSIS/RTOS2/RTX/Config/RTX_Config.h
-      Source file:   CMSIS/RTOS2/RTX/Config/RTX_Config.c
-      Source file:   CMSIS/RTOS2/RTX/Template/Semaphore.c
-      Source file:   CMSIS/RTOS2/RTX/Template/svc_user.c
-      Source file:   CMSIS/RTOS2/RTX/Template/Timer.c
-      Source file:   CMSIS/RTOS2/RTX/Template/Mutex.c
-      Source file:   CMSIS/RTOS2/RTX/Template/main.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_kernel.c
-      Source file:   CMSIS/RTOS2/RTX/Template/Thread.c
-      Source file:   CMSIS/RTOS2/RTX/Template/MsgQueue.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_thread.c
-      Source file:   CMSIS/RTOS2/RTX/Template/MemPool.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_delay.c
-      Source file:   CMSIS/RTOS2/RTX/Template/Events.c
-      Include file:  CMSIS/RTOS2/RTX/Include/rtx_os.h
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_system.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_timer.c
-      Source file:   CMSIS/RTOS2/RTX/Source/ARM/irq_armv7m.s
       Source file:   CMSIS/RTOS2/RTX/Source/rtx_msgqueue.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_memory.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_mutex.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_system.c
       Source file:   CMSIS/RTOS2/RTX/Source/rtx_evr.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_semaphore.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_mempool.c
-      Source file:   CMSIS/RTOS2/RTX/Source/rtx_lib.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_thread.c
       Source file:   CMSIS/RTOS2/RTX/Source/rtx_evflags.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Mutex.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_kernel.c
+      Source file:   CMSIS/RTOS2/RTX/Template/main.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Semaphore.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_timer.c
+      Include file:  CMSIS/RTOS2/RTX/Config/RTX_Config.h
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_semaphore.c
+      Source file:   CMSIS/RTOS2/RTX/Config/RTX_Config.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Thread.c
+      Source file:   CMSIS/RTOS2/RTX/Template/svc_user.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_lib.c
+      Source file:   CMSIS/RTOS2/RTX/Template/Timer.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_delay.c
+      Source file:   CMSIS/RTOS2/RTX/Template/MemPool.c
+      Source file:   CMSIS/RTOS2/RTX/Template/MsgQueue.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_memory.c
+      Include file:  CMSIS/RTOS2/RTX/Include/rtx_os.h
+      Source file:   CMSIS/RTOS2/RTX/Template/Events.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_mutex.c
+      Source file:   CMSIS/RTOS2/RTX/Source/rtx_mempool.c
+      Source file:   CMSIS/RTOS2/RTX/Source/ARM/irq_armv7m.s
       Source file:   CMSIS/RTOS2/Source/os_systick.c
 
    * Component: CMSIS Driver:Ethernet MAC(API)@2.2.0
@@ -212,15 +271,15 @@ Package Vendor: Keil
       Source file:   Source/EventRecorder.c
 
    * Component: Keil::Device:STM32Cube Framework:Classic@1.7.9
-      Source file:   MDK/Templates_LL/Src/main.c
-      Include file:  CMSIS/Driver/Config/RTE_Device.h
-      Source file:   MDK/Templates/Src/stm32f4xx_it.c
-      Source file:   MDK/Templates/Src/stm32f4xx_hal_msp.c
-      Include file:  MDK/Templates/Inc/stm32f4xx_it.h
-      Include file:  MDK/Templates_LL/Inc/main.h
       Include file:  MDK/Templates/Inc/stm32f4xx_hal_conf.h
-      Include file:  MDK/Templates/Inc/main.h
+      Include file:  CMSIS/Driver/Config/RTE_Device.h
       Source file:   MDK/Templates/Src/main.c
+      Include file:  MDK/Templates/Inc/stm32f4xx_it.h
+      Source file:   MDK/Templates/Src/stm32f4xx_hal_msp.c
+      Source file:   MDK/Templates_LL/Src/main.c
+      Source file:   MDK/Templates/Src/stm32f4xx_it.c
+      Include file:  MDK/Templates_LL/Inc/main.h
+      Include file:  MDK/Templates/Inc/main.h
 
    * Component: Keil::Device:STM32Cube HAL:ADC@1.7.9
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c
@@ -234,8 +293,8 @@ Package Vendor: Keil
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
 
    * Component: Keil::Device:STM32Cube HAL:DMA@1.7.9
-      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:GPIO@1.7.9
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
@@ -245,8 +304,8 @@ Package Vendor: Keil
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:PWR@1.7.9
-      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
 
    * Component: Keil::Device:STM32Cube HAL:RCC@1.7.9
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
@@ -256,38 +315,38 @@ Package Vendor: Keil
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c
 
    * Component: Keil::Device:STM32Cube HAL:SRAM@1.7.9
-      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sram.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_fmc.c
 
    * Component: Keil::Device:STM32Cube HAL:TIM@1.7.9
-      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:USART@1.7.9
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_usart.c
 
    * Component: Keil::Device:Startup@2.6.3
+      Source file:   MDK/Device/Source/ARM/STM32F42xxx_43xxx_OPT.s
       Include file:  Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
       Source file:   MDK/Device/Source/ARM/STM32F4xx_OTP.s
       Source file:   Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/arm/startup_stm32f429xx.s
-      Source file:   MDK/Device/Source/ARM/STM32F42xxx_43xxx_OPT.s
       Source file:   Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c
 
    * Component: Keil::Network&MDK-Pro:CORE&IPv4/IPv6 Debug@7.15.0
-      Source file:   Network/Config/Net_Config.c
-      Source file:   Network/Config/Net_Debug.c
       Library file:  Network/Lib/ARM/Net_Dbg_CM3_L.lib
       Include file:  Network/Include/rl_net.h
+      Source file:   Network/Config/Net_Debug.c
+      Source file:   Network/Config/Net_Config.c
 
    * Component: Keil::Network&MDK-Pro:Interface:ETH@7.15.0
       Include file:  Network/Config/Net_Config_ETH.h
 
    * Component: Keil::Network&MDK-Pro:Service:Web Server Compact&HTTP@7.15.0
-      Source file:   Network/Template/HTTP_Server_Access.c
-      Include file:  Network/Config/Net_Config_HTTP_Server.h
       Source file:   Network/Template/HTTP_Server_CGI.c
-      Source file:   Network/Template/HTTP_Server_Error.c
       Source file:   Network/Template/HTTP_Server_Multiuser.c
+      Include file:  Network/Config/Net_Config_HTTP_Server.h
+      Source file:   Network/Template/HTTP_Server_Error.c
+      Source file:   Network/Template/HTTP_Server_Access.c
 
    * Component: Keil::Network&MDK-Pro:Socket:TCP@7.15.0
       Include file:  Network/Config/Net_Config_TCP.h
@@ -297,8 +356,7 @@ Package Vendor: Keil
    * Component: Keil::Network&MDK-Pro:Socket:UDP@7.15.0
       Include file:  Network/Config/Net_Config_UDP.h
       Source file:   Network/Template/UDP_Socket.c
-Target not created.
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

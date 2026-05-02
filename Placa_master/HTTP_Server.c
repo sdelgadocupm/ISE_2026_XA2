@@ -44,7 +44,7 @@ static GPIO_InitTypeDef GPIO_InitStruct;
 
 													 
 
-void ADC_Initialize();
+//void ADC_Initialize();
 													 
 
 
@@ -99,7 +99,7 @@ __NO_RETURN void app_main (void *arg) {
   (void)arg;
 	
   
-	ADC_Initialize();
+//	ADC_Initialize();
 
   netInitialize ();
 
