@@ -229,11 +229,11 @@ uint32_t generar_cadena_medidas(char *out, uint32_t max_len)
   return (uint32_t)n;
 }
 
-void guardar_umbrales(float temp, int co2, int  tvoc)
+void guardar_umbrales(uint16_t temp, uint16_t co2, uint16_t  tvoc)
 {
   
   //Guardameos la temperatura
-  uint16_t temp10 = (uint16_t)(temp * 10.0f);
+  uint16_t temp10 = temp ;
   uint8_t buf_temp[2];
   buf_temp[0] = (temp10 >> 8) & 0xFF;
   buf_temp[1] = temp10 & 0xFF;
@@ -250,23 +250,23 @@ void guardar_umbrales(float temp, int co2, int  tvoc)
   uint8_t buf_tvoc[2];
   buf_tvoc[0] = (tvoc >> 8) & 0xFF;
   buf_tvoc[1] = tvoc & 0xFF;
-   registroDevalor(CFG_PAGE_ADDR, buf_tvoc, 2, &cfg_index);
+  registroDevalor(CFG_PAGE_ADDR, buf_tvoc, 2, &cfg_index);
 }
 
-void leer_umbrales(float *temp, int *co2, int *tvoc) {
+void leer_umbrales(uint16_t *temp, uint16_t *co2, uint16_t *tvoc) {
   uint8_t buf[2];
   static uint8_t cfg_index_r = 0;
   
   // Leer temperatura
   lecturaDeValor(CFG_PAGE_ADDR, buf, 2, &cfg_index_r);
-  *temp = ((float)(((uint16_t)buf[0] << 8) | buf[1])) / 10.0f;
+  *temp = (((uint16_t)buf[0] << 8) | buf[1]);
   
   // Leer CO2
   lecturaDeValor(CFG_PAGE_ADDR, buf, 2, &cfg_index_r);
-  *co2 = ((int)buf[0] << 8) | buf[1];
+  *co2 = (buf[0] << 8) | buf[1];
   
   // Leer TVOC
   lecturaDeValor(CFG_PAGE_ADDR, buf, 2, &cfg_index_r);
-  *tvoc = ((int)buf[0] << 8) | buf[1];
+  *tvoc = (buf[0] << 8) | buf[1];
 }
 

@@ -2,6 +2,7 @@
 #define LOGGER_H
 
 #include "cmsis_os2.h"
+#include "RTC.h"
 #include <stdint.h>
 #include <stdbool.h>
 

@@ -19,8 +19,8 @@
 
 // ========== EVENTOS HISTÓRICOS (0x0800 - 0x5FFF: 20KB) ==========
 #define ALARM_EVENTS_PAGE_ADDR   0x0800
-#define ALARM_EVENT_SIZE         19       
-#define MAX_ALARM_EVENTS         1150     // (20KB / 19)
+#define ALARM_EVENT_SIZE         32       
+#define MAX_ALARM_EVENTS         640     // (20KB / 19)
 
 extern bool completo;
 
@@ -47,7 +47,7 @@ void lecturaDeValor(uint16_t direccion, uint8_t* buf_rd, uint8_t len, uint8_t *l
 uint32_t generar_cadena_medidas(char *out, uint32_t max_len);
 
 
-void guardar_umbrales(float temp, int co2, int  tvoc);
+void guardar_umbrales(uint16_t temp, uint16_t co2, uint16_t  tvoc);
   
-void leer_umbrales(float *temp, int *co2, int *tvoc);
+void leer_umbrales(uint16_t *temp, uint16_t *co2, uint16_t *tvoc);
 #endif

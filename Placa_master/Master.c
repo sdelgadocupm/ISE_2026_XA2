@@ -13,6 +13,7 @@ uint32_t tiempo = 0 ;
  
 uint32_t tiempo_transcurrido = 0;
 
+extern int Init_ThSNTP();
 
 extern uint16_t temp;
 extern uint16_t co2;
@@ -23,9 +24,9 @@ extern uint16_t modo;
 extern osMessageQueueId_t mid_ComQueue;
 
 // Variables globales de umbrales (ya inicializadas aquí)
-float th_temp = 60.0f;
-int th_co2 = 1000;
-int th_tvoc = 500;
+uint16_t th_temp = 60;
+uint16_t th_co2 = 1000;
+uint16_t th_tvoc = 500;
 
 int Init_Master(void) {
  
@@ -60,15 +61,15 @@ void automata (void)
       break;
       
         case RECEPCION:
-          printf("[MASTER] Estado: RECEPCION (esperando confirmación del SLAVE)\n");
+         // printf("[MASTER] Estado: RECEPCION (esperando confirmación del SLAVE)\n");
           tiempo_transcurrido = osKernelGetTickCount() - timeout_rx;
         
             if (tiempo_transcurrido > RX_TIMEOUT_MS) {
-          printf("[MASTER] ? Confirmación recibida (timeout OK)\n");
+          //printf("[MASTER] ? Confirmación recibida (timeout OK)\n");
           rx_confirmado = true;
         }
              if (rx_confirmado) {
-          printf("[MASTER] ? Transición a WEB\n\n");
+          //printf("[MASTER] ? Transición a WEB\n\n");
           modo_master = WEB;
           rx_confirmado = false;
         }
@@ -76,14 +77,23 @@ void automata (void)
       
       break;
             case TRANSMISION:
-              printf("[MASTER] Estado: TRANSMISION\n");
               if (tx_pendiente) {
-              enviar_umbrales_a_slave();
-              tx_pendiente = false;
-        }
-              
-        modo_master = RECEPCION;
-        printf("[MASTER] ? Transición a RECEPCION\n\n");
+
+								if (estado == 1) {
+										printf("[MASTER] Slave en RUN, enviando umbrales\n");
+										enviar_umbrales_a_slave();
+										tx_pendiente = false;
+
+										modo_master = RECEPCION;
+										//printf("[MASTER] ? Transición a RECEPCION\n\n");
+
+								} else {
+										osDelay(10);  
+								}
+
+						} else {
+								modo_master = RECEPCION;
+						}
         break;
       
       break;
@@ -95,14 +105,14 @@ void automata (void)
                  tiempo = osKernelGetTickCount();
               if((tiempo - last_check) > 5000)
               {
-               printf("[MASTER] Estado: WEB (VERIFICACION DE DATOS )\n");
+               //printf("[MASTER] Estado: WEB (VERIFICACION DE DATOS )\n");
                     last_check = tiempo;
               }
                 if (tx_pendiente) {
-            printf("[MASTER] ? Cambios detectados, volviendo a TRANSMISION\n\n");
+            //printf("[MASTER] ? Cambios detectados, volviendo a TRANSMISION\n\n");
             modo_master = TRANSMISION;
           } else {
-            printf("[MASTER] ? Esperando cambios...\n");
+            //printf("[MASTER] ? Esperando cambios...\n");
           }
         
   osDelay(500);
@@ -119,30 +129,36 @@ void automata (void)
 
 void Inicializacion(void)
 {
-  printf("[MASTER] === Inicializando Master ===\n");
+  //printf("[MASTER] === Inicializando Master ===\n");
   //Inicializamos todo lo que vamos a usar, menos los hilos qeu lo haremos en el Server, en el  app_main
-  printf("[MASTER] Init I2C...\n");
+  //printf("[MASTER] Init I2C...\n");
   Init_I2C();
   osDelay(100);
-  
+  mid_ComQueue = osMessageQueueNew(10, sizeof(MSGQUEUE_OBJ_COM_t), NULL);
  // Inicializar UART
-  printf("[MASTER] Init UART...\n");
+  //printf("[MASTER] Init UART...\n");
   UART_Init();
+	Init_ThCom();
+	Init_ThRecep();
+	
+	Init_Logger();
+	
+	UART_SetThreadIds(tid_ThCom, tid_ThRecep);
   osDelay(100);
   
   
   //Inicilazaira NSTP Y RTC 
-  
-  
+  RTC_Init();
+  Init_ThSNTP();
   
   printf("[MASTER] Cargando umbrales desde EEPROM...\n");
   leer_umbrales(&th_temp, &th_co2, &th_tvoc);
   
-  printf("[MASTER] Umbrales confirmados: T=%.1f, CO2=%d, TVOC=%d\n", 
-         th_temp, th_co2, th_tvoc);
+  //printf("[MASTER] Umbrales confirmados: T=%d, CO2=%d, TVOC=%d\n", 
+  //       th_temp, th_co2, th_tvoc);
   osDelay(100);
   
-   printf("[MASTER] === Inicialización completa ===\n\n");
+   //printf("[MASTER] === Inicialización completa ===\n\n");
   
   modo_master = TRANSMISION;
   tx_pendiente = true; 
@@ -153,8 +169,8 @@ void enviar_umbrales_a_slave(void)
   //Metemos los datos al slave de los umbrales
    printf("[MASTER-TX] Enviando umbrales al SLAVE...\n");
   
-    send_uart_command(1, (int)(th_temp * 10.0f));
-  printf("  ? Temp: 1 %d\n", (int)(th_temp * 10.0f));
+  send_uart_command(1, th_temp );
+  printf("  ? Temp: 1 %d\n",th_temp );
   osDelay(50);
   
   send_uart_command(2, th_co2);
@@ -170,16 +186,15 @@ void enviar_umbrales_a_slave(void)
 
 
 
-static void send_uart_command(int id, int valor) {
+static void send_uart_command(uint16_t id, uint16_t valor) {
   MSGQUEUE_OBJ_COM_t out;
-  snprintf(out.Mensaje, sizeof(out.Mensaje), "%d %d\n", id, valor);
-  out.TamMens = (uint8_t)strlen(out.Mensaje);
-  osMessageQueuePut(mid_ComQueue, &out, 0U, 0U);
+  out.TamMens = sprintf(out.Mensaje, "\n%d %d\r\n", id, valor);
+  osMessageQueuePut(mid_ComQueue, &out, 0U, 100U);
 }
 
 // MARCAR CAMBIO DE UMBRALES (desde CGI) 
 void Master_confirm(void) {
-  printf("[MASTER] ?? Cambio de umbrales detectado\n");
+ // printf("[MASTER] ?? Cambio de umbrales detectado\n");
   tx_pendiente = true;
 }
  

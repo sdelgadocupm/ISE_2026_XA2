@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Placa_Autonoma.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Placa_Autonoma.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Wed Apr 29 20:34:43 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Sun May  3 18:11:57 2026
 <BR><P>
 <H3>Maximum Stack Usage =        556 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -911,6 +911,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ProcesarTrama
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ThCom
+<LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Principal
 </UL>
 
 <P><STRONG><a name="[107]"></a>sprintf</STRONG> (Thumb, 38 bytes, Stack size 32 bytes, sprintf.o(.text))
@@ -1015,9 +1016,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[113]"></a>_printf_truncate_unsigned</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, _printf_truncate.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_oct
-<LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_dec
+<BR><BR>[Called By]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_dec
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_hex
+<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_oct
 </UL>
 
 <P><STRONG><a name="[10f]"></a>_printf_str</STRONG> (Thumb, 82 bytes, Stack size 16 bytes, _printf_str.o(.text))
@@ -1086,8 +1087,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_common
 </UL>
-<BR>[Called By]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_oct
-<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_ll_oct
+<BR>[Called By]<UL><LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_ll_oct
+<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_int_oct
 </UL>
 
 <P><STRONG><a name="[d4]"></a>_printf_int_oct</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, _printf_oct_int_ll.o(.text))
@@ -2402,8 +2403,8 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;svcRtxKernelStart
 </UL>
 
-<P><STRONG><a name="[6e]"></a>Principal</STRONG> (Thumb, 890 bytes, Stack size 120 bytes, principal.o(.text.Principal))
-<BR><BR>[Stack]<UL><LI>Max Depth = 312 + Unknown Stack Size
+<P><STRONG><a name="[6e]"></a>Principal</STRONG> (Thumb, 1022 bytes, Stack size 128 bytes, principal.o(.text.Principal))
+<BR><BR>[Stack]<UL><LI>Max Depth = 320 + Unknown Stack Size
 <LI>Call Chain = Principal &rArr; SystemClock_Config &rArr; HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_NVIC_SetPriority &rArr; NVIC_EncodePriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadFlagsWait
@@ -2417,10 +2418,11 @@ Global Symbols
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_PWR_EnterSTOPMode
 <LI><a href="#[1d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 <LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sprintf
+<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printf
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> principal.o(.text.Init_Principal)
 </UL>
-<P><STRONG><a name="[1d8]"></a>ProcesarTrama</STRONG> (Thumb, 184 bytes, Stack size 24 bytes, threcepcion.o(.text.ProcesarTrama))
+<P><STRONG><a name="[1d8]"></a>ProcesarTrama</STRONG> (Thumb, 172 bytes, Stack size 24 bytes, threcepcion.o(.text.ProcesarTrama))
 <BR><BR>[Stack]<UL><LI>Max Depth = 532 + Unknown Stack Size
 <LI>Call Chain = ProcesarTrama &rArr; sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>

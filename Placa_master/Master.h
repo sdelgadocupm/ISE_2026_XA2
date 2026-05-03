@@ -7,6 +7,7 @@
 #include "Recepcion.h"
 #include "Memoria.h"
 #include "UARTManager.h"
+#include "RTC.h"
 #include <stdlib.h> 
 #include <stdio.h>
 #include <string.h>
@@ -24,7 +25,7 @@ typedef enum
 void Inicializacion(void);
 void automata (void);
 void enviar_umbrales_a_slave(void);
-static void send_uart_command(int id, int valor) ;
+static void send_uart_command(uint16_t id, uint16_t valor) ;
 void Master_confirm(void);
 
 static bool tx_pendiente = false;        
@@ -32,9 +33,9 @@ static bool rx_confirmado = false;
 static uint32_t timeout_rx = 0;          
 #define RX_TIMEOUT_MS 5000               
 
- extern float th_temp ;
- extern int   th_co2 ;
- extern int   th_tvoc;
+ extern uint16_t th_temp ;
+ extern uint16_t   th_co2 ;
+ extern uint16_t   th_tvoc;
 
 static uint32_t last_check = 0;
 

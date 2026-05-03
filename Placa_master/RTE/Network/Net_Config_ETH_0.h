@@ -40,12 +40,12 @@
 //     <s.15>IP Address
 //     <i>Static IPv4 Address in text representation
 //     <i>Default: "192.168.0.100"
-#define ETH0_IP4_ADDR           "10.199.0.180"
+#define ETH0_IP4_ADDR           "192.168.137.2"
 
 //     <s.15>Subnet mask
 //     <i>Local Subnet mask in text representation
 //     <i>Default: "255.255.255.0"
-#define ETH0_IP4_MASK           "255.255.255.254"
+#define ETH0_IP4_MASK           "255.255.255.0"
 
 //     <s.15>Default Gateway
 //     <i>IP Address of Default Gateway in text representation

@@ -22,6 +22,8 @@ extern uint16_t modo;
 
 extern osMessageQueueId_t mid_AlarmQueue;
 
+extern osThreadId_t tid_ThRecep;
+
 void ThRecep(void *argument);                   // thread functiond);
 int Init_ThRecep (void);
 void ProcesarTrama(char *buffer);

@@ -4,7 +4,7 @@
 #include <string.h>
 #include "Recepcion.h"
 #include "UARTManager.h"
-
+#include "RTC.h"
 
 /*----------------------------------------------------------------------------
  *      Thread 1 'Thread_Name': Sample thread
@@ -28,7 +28,7 @@ uint16_t estado;
 uint16_t modo; 
 uint16_t modo_ant; 
 
-
+char ultima_actualizacion[25] = "Esperando datos...";
 //INICIALIZACIÓN DEL HILO	
 
 int Init_ThRecep (void) {
@@ -78,24 +78,34 @@ void ProcesarTrama(char *buffer) {
     int id, valor;
     // sscanf busca el primer entero, salta el espacio y busca el segundo
     if (sscanf(buffer, "%d %d", &id, &valor) == 2) {
+			
+				RTC_TimeTypeDef sTime;
+        RTC_DateTypeDef sDate;
+        HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+        HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
+        
+        sprintf(ultima_actualizacion, "%02d-%02d-20%02d %02d:%02d:%02d", 
+                sDate.Date, sDate.Month, sDate.Year, 
+                sTime.Hours, sTime.Minutes, sTime.Seconds);
+			
         switch(id) {
             case 1: // Valor de Temperatura
-							//printf("[RX] ? Temp es %d\n", valor);
+							printf("[RX] ? Temp es %d\n", valor);
               temp = (uint16_t)valor;
 						  msg.temperatura = temp;
               break;
             case 2: // Valor de eCO2
-							//printf("[RX] ? CO2 es %d\n", valor);
+							printf("[RX] ? CO2 es %d\n", valor);
               co2 = (uint16_t)valor;
 							msg.eco2 = co2;
               break;
             case 3: // Valor de tvoc
-							//printf("[RX] ? TVOC es %d\n", valor);
+							printf("[RX] ? TVOC es %d\n", valor);
               tvoc = (uint16_t)valor;
 							msg.tvoc = tvoc;
               break;
 						case 4: // Modo
-							//printf("[RX] ? Modo es %d\n", valor);
+							printf("[RX] ? Modo es %d\n", valor);
 							modo = (uint16_t)valor;
                 if(modo == 2){
 									msg.tipo_evento = 0;
@@ -107,7 +117,7 @@ void ProcesarTrama(char *buffer) {
 								modo_ant = modo;
               break;
 						case 5: // Estado
-								//printf("[RX] ? Estado es %d \n", valor);
+								printf("[RX] ? Estado es %d \n", valor);
 								estado = (uint16_t)valor;
                 break;
 						case 6: // Valor RFID

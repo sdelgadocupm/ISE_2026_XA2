@@ -14,5 +14,5 @@ extern osMessageQueueId_t mid_ComQueue;   //Id de la cola
 
 void ThCom(void *argument);                   // thread functiond);
 int Init_ThCom (void);
-
+extern osThreadId_t tid_ThCom;
 #endif

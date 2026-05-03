@@ -179,6 +179,10 @@ void Logger(void *argument) {
         osStatus_t status = osMessageQueueGet(mid_AlarmQueue, &msg, NULL, osWaitForever);
         
         if (status == osOK) {
+						RTC_TimeTypeDef sTime;
+            RTC_DateTypeDef sDate;
+            HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
+            HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
             if (msg.tipo_evento == 0) {
                 // ACTIVACIÓN
                 printf("[Logger] ??  ALARMA ACTIVADA\n");
@@ -189,6 +193,10 @@ void Logger(void *argument) {
                 
                 memset(current_alarm.rfid, 0, 4);
                 
+								current_alarm.hora_activacion = sTime.Hours;
+                current_alarm.minuto_activacion = sTime.Minutes;
+                current_alarm.segundo_activacion = sTime.Seconds;
+							
                 current_alarm.temperatura = msg.temperatura;
                 current_alarm.eco2 = msg.eco2;
                 current_alarm.tvoc = msg.tvoc;
@@ -199,6 +207,10 @@ void Logger(void *argument) {
                 
             } else if (msg.tipo_evento == 1 && alarma_en_progreso) {
                 // DESACTIVACIÓN
+								current_alarm.hora_desac = sTime.Hours;
+                current_alarm.minuto_desac = sTime.Minutes;
+                current_alarm.segundo_desac = sTime.Seconds;
+							
                 if(msg.rfid[0] == 0 && msg.rfid[1] == 0 && 
                    msg.rfid[2] == 0 && msg.rfid[3] == 0){
                     current_alarm.tipo_desactivacion = 1;
@@ -210,42 +222,42 @@ void Logger(void *argument) {
                 guardar_evento_alarma(&current_alarm);
                 alarma_en_progreso = false;
 								
-								uint8_t buffer[ALARM_EVENT_SIZE];
-                uint16_t eventos_validos = 0;
-								for (uint16_t i = 0; i < MAX_ALARM_EVENTS; i++) {
-                    uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (i * ALARM_EVENT_SIZE);
-                    EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
-                    
-                    if (buffer[0] == 0xAA) {
-                        eventos_validos++;
-                        uint16_t temp = ((uint16_t)buffer[1] << 8) | buffer[2];
-                        uint16_t co2 = ((uint16_t)buffer[3] << 8) | buffer[4];
-                        uint16_t tvoc = ((uint16_t)buffer[5] << 8) | buffer[6];
-                        uint8_t h_act = buffer[7];
-                        uint8_t m_act = buffer[8];
-                        uint8_t s_act = buffer[9];
-                        uint8_t h_desac = buffer[10];
-                        uint8_t m_desac = buffer[11];
-                        uint8_t s_desac = buffer[12];
-                        uint8_t tipo_desac = buffer[13];
-                        uint8_t rfid0 = buffer[14];
-                        uint8_t rfid1 = buffer[15];
-                        uint8_t rfid2 = buffer[16];
-                        uint8_t rfid3 = buffer[17];
-                        
-                        const char *tipo = (tipo_desac == 0) ? "RFID" : (tipo_desac == 1) ? "REMOTO" : "PENDING";
-                        
-                        printf("[%2u] %02u:%02u:%02u -> %02u:%02u:%02u | T=%u CO2=%u TVOC=%u | %s %02X%02X%02X%02X\n",
-                               i, h_act, m_act, s_act, h_desac, m_desac, s_desac, 
-                               temp, co2, tvoc, tipo, rfid0, rfid1, rfid2, rfid3);
-                    } else if (buffer[0] == 0xFF) {
-                        break;
-                    }
-                }
-                
-                printf("Total: %u eventos\n", eventos_validos);
-                printf("==================================\n\n");
-            }
+//								uint8_t buffer[ALARM_EVENT_SIZE];
+//                uint16_t eventos_validos = 0;
+//								for (uint16_t i = 0; i < MAX_ALARM_EVENTS; i++) {
+//                    uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (i * ALARM_EVENT_SIZE);
+//                    EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
+//                    
+//                    if (buffer[0] == 0xAA) {
+//                        eventos_validos++;
+//                        uint16_t temp = ((uint16_t)buffer[1] << 8) | buffer[2];
+//                        uint16_t co2 = ((uint16_t)buffer[3] << 8) | buffer[4];
+//                        uint16_t tvoc = ((uint16_t)buffer[5] << 8) | buffer[6];
+//                        uint8_t h_act = buffer[7];
+//                        uint8_t m_act = buffer[8];
+//                        uint8_t s_act = buffer[9];
+//                        uint8_t h_desac = buffer[10];
+//                        uint8_t m_desac = buffer[11];
+//                        uint8_t s_desac = buffer[12];
+//                        uint8_t tipo_desac = buffer[13];
+//                        uint8_t rfid0 = buffer[14];
+//                        uint8_t rfid1 = buffer[15];
+//                        uint8_t rfid2 = buffer[16];
+//                        uint8_t rfid3 = buffer[17];
+//                        
+//                        const char *tipo = (tipo_desac == 0) ? "RFID" : (tipo_desac == 1) ? "REMOTO" : "PENDING";
+//                        
+//                        printf("[%2u] %02u:%02u:%02u -> %02u:%02u:%02u | T=%u CO2=%u TVOC=%u | %s %02X%02X%02X%02X\n",
+//                               i, h_act, m_act, s_act, h_desac, m_desac, s_desac, 
+//                               temp, co2, tvoc, tipo, rfid0, rfid1, rfid2, rfid3);
+//                    } else if (buffer[0] == 0xFF) {
+//                        break;
+//                    }
+//                }
+//                
+//                printf("Total: %u eventos\n", eventos_validos);
+//                printf("==================================\n\n");
+						}
         }
         
         osThreadYield();
