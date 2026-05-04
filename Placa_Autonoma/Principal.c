@@ -9,6 +9,7 @@ osThreadId_t tid_Principal;                        // thread id
 void Principal (void *argument);                   // thread function
 extern uint8_t ultimo_uid[4];
 static MSGQUEUE_OBJ_COM_t msg_com;
+static MSG_ADC_VALORES_t msg_adc;
 volatile state_t modo; 
 extern osThreadId_t tid_ThCom;
 extern osThreadId_t tid_ThRecep;
@@ -32,8 +33,15 @@ int Init_Principal (void) {
 	//Creación de la cola de envío
 	mid_ComQueue = osMessageQueueNew(10, sizeof(MSGQUEUE_OBJ_COM_t), NULL);
 	if (mid_ComQueue == NULL) {
-		return(-1);  
-	}
+		return(-1); 
+  }    
+ //Creacion d la cola del adc
+    mid_MsgQueueADC= osMessageQueueNew(2, sizeof(MSG_ADC_VALORES_t), NULL);
+    if(mid_MsgQueueADC == NULL)
+    {
+      return(-1); 
+    }
+	
 	UART_Init();
 	//Inicialización ThCom y Recepción y la UART
 	Init_ThCom();
