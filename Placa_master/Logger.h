@@ -31,8 +31,6 @@ extern osThreadId_t tid_Logger;
 
 void Logger(void *argument);
 int Init_Logger(void);
-uint32_t generar_cadena(char *out, uint32_t max_len);
-void enviar_historial_eventos(void);
 
 void leer_evento_alarma_master(uint16_t index, AlarmEvent_t *event);
 //Devuelve 1 si el evento ya existe y es valido si no devuleve un 0 

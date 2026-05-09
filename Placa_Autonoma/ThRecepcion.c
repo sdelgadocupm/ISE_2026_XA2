@@ -41,7 +41,7 @@ void ThRecep (void *argument) {
 	uint8_t byte_entrante;
   uint8_t indice = 0;
   static char buffer_local[64];
-	
+	memset(buffer_local, 0 ,64);
 	
   while (1) {
 		
@@ -53,6 +53,7 @@ void ThRecep (void *argument) {
 			if (indice > 0) {
         buffer_local[indice] = '\0'; // Cerramos el string
         ProcesarTrama(buffer_local);  // Analizamos Trama
+				memset(buffer_local, 0 ,64);
         indice = 0; // Reset para la próxima vez
        }
      }else {
@@ -69,6 +70,8 @@ void ProcesarTrama(char *buffer) {
     // sscanf busca el primer entero, salta el espacio y busca el segundo
 	//printf("%s\n",buffer);
     if (sscanf(buffer, "%d %d", &id, &valor) == 2) {
+				printf("%[RX-PARSER] ID = %d, Valor = %d\n",id,valor);
+
         switch(id) {
             case 1: // Valor de Umbral de Temperatura
 							printf("[RX] ? Setting temp threshold to %d\n", valor);

@@ -14,7 +14,6 @@ t   <input type=hidden value="ctrl" name=pg>
 t   <input type=hidden value="disable_alarm" name=cmd>
 t   <input class="btn danger" type=button value="DESACTIVAR ALARMA" onclick="confirmDisable(this.form)">
 t  </form>
-t  <p class="hint">Recomendado: proteger con usuario/clave (realm/admin) en produccion.</p>
 t </div>
 i pg_footer.inc
 . End of script must be closed with period.

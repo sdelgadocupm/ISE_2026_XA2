@@ -1,5 +1,4 @@
 #include "stm32f4xx_hal.h"
-#include "adc.h"
 #define RESOLUTION_12B 4096U
 #define VREF 3.3f
 #define RESISTENCIA_SHUNT 1
@@ -13,30 +12,6 @@
   * @param None
   * @retval None
   */
-  
-  osThreadId_t TID_ADC;
-  osMessageQueueId_t mid_MsgQueueADC;
-  
-  MSG_ADC_VALORES_t adc_tx;
-  
-  int num = 0;
-  
-  uint16_t temp_real;
-  uint16_t cons_real;
-  
-  
-//  mid_MsgQueueADC = osMessageQueueNew(1, sizeof(1), NULL); inicalizalo en el main
-  
-  
-  int Init_ThADCs (void) {
- 
-  TID_ADC = osThreadNew(Thread_ADC, NULL, NULL);
-  if (TID_ADC == NULL) {
-    return(-1);
-  }
-}
-
-  
 void ADC1_pins_F429ZI_config(){
 	  GPIO_InitTypeDef GPIO_InitStruct = {0};
 	__HAL_RCC_ADC1_CLK_ENABLE();
@@ -127,7 +102,7 @@ uint16_t ADC_getTemp(ADC_HandleTypeDef *hadc)
 		
 		resistencia = voltage/CORRIENTE;
 		
-		temp = ((resistencia/RO)-1)*ALFA; //temp = (resistencia - RO) / (RO * ALFA);
+		temp = ((resistencia/RO)-1)*ALFA;
 		return temp;
 
 }
@@ -167,46 +142,18 @@ uint16_t ADC_getConsumo(ADC_HandleTypeDef *hadc)
 
 }
 	
-//Example of using this code from a Thread 
-void Thread_ADC (void *argument) {
+/* Example of using this code from a Thread 
+void Thread (void *argument) {
   ADC_HandleTypeDef adchandle; //handler definition
 	ADC1_pins_F429ZI_config(); //specific PINS configuration
-	 
+	float value;
 	ADC_Init_Single_Conversion(&adchandle , ADC1); //ADC1 configuration
   while (1) {
     
-	  temp_real = ADC_getTemp(&adchandle);
-     cons_real = ADC_getConsumo(&adchandle);
-    osMessageQueuePut(mid_MsgQueueADC, &adc_tx, 0, 0);
-    
-//    media(temp_real, cons_real,&num);
-    
-      
-    
+	  value=ADC_getVoltage(&adchandle , 10 ); //get values from channel 10->ADC123_IN10
+		value=ADC_getVoltage(&adchandle , 13 );
 		osDelay(1000);
    
   }
 }
-
-//void media(uint16_t tem, uint16_t cons,int *num )
-//{
-//  static uint32_t cons_aux = 0;
-//  static uint32_t tem_aux = 0;
-//  
-//  	cons_aux += cons;
-//  tem_aux += tem;
-//  (*num)++;
-//   adc_tx;
-//  if(*num >= 5)
-//  {
-//    adc_tx.temp_ADC = cons_aux/10;
-//    adc_tx.cons_ADC = tem_aux/10;
-//    
-//    osMessageQueuePut(mid_MsgQueueADC, &adc_tx, 0, 0);
-//    
-//    cons_aux = 0;
-//    tem_aux = 0;
-//    *num = 0;
-//  }
-//}
-
+*/

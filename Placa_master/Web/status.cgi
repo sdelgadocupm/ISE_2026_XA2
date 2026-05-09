@@ -37,7 +37,6 @@ t   <div class="kpi"><div class="label">TVOC</div><div class="value">
 c s 9 %d ppb
 t   </div></div>
 t  </div>
-t  <p class="hint">La calidad del aire puede ser IAQ o ppm equivalente, segn vuestro sensor.</p>
 t </div>
 i pg_footer.inc
 .

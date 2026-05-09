@@ -1,12 +1,13 @@
 #include "cmsis_os2.h"                          // CMSIS RTOS header file
  #include "Master.h"
 /*----------------------------------------------------------------------------
- *      Thread 1 'Thread_Name': Sample thread
+ *      MASTER
  *---------------------------------------------------------------------------*/
  
 osThreadId_t tid_Master_t;                        // thread id
  
 void Master_Th (void *argument);                   // thread function
+
 static  Master_Estado_t modo_master = INIT;
 uint32_t tiempo = 0 ;
  
@@ -21,12 +22,17 @@ extern uint16_t tvoc;
 extern uint16_t consumo;
 extern uint16_t estado;
 extern uint16_t modo;
+
 extern osMessageQueueId_t mid_ComQueue;
 
 // Variables globales de umbrales (ya inicializadas aquí)
 uint16_t th_temp = 60;
 uint16_t th_co2 = 1000;
 uint16_t th_tvoc = 500;
+
+/* ============================================================================
+ * Inicialización
+ * ========================================================================= */
 
 int Init_Master(void) {
  
@@ -46,12 +52,11 @@ void Master_Th (void *argument) {
   }
 }
 
+/* ============================================================================
+ * Máquina de estados
+ * ========================================================================= */
 
-
-
-
-void automata (void)
-{
+void automata (void){
  
   switch(modo_master)
   {
@@ -61,104 +66,98 @@ void automata (void)
       break;
       
         case RECEPCION:
-         // printf("[MASTER] Estado: RECEPCION (esperando confirmación del SLAVE)\n");
+					// Calcular tiempo transcurrido desde envío
           tiempo_transcurrido = osKernelGetTickCount() - timeout_rx;
         
-            if (tiempo_transcurrido > RX_TIMEOUT_MS) {
-          //printf("[MASTER] ? Confirmación recibida (timeout OK)\n");
-          rx_confirmado = true;
-        }
-             if (rx_confirmado) {
-          //printf("[MASTER] ? Transición a WEB\n\n");
-          modo_master = WEB;
-          rx_confirmado = false;
-        }
+					// Esperar timeout de 5 segundos
+          if (tiempo_transcurrido > RX_TIMEOUT_MS) {
+          
+						rx_confirmado = true;
+					}
+          if (rx_confirmado) {
+						modo_master = WEB;
+						rx_confirmado = false;
+					}
              osDelay(100);
       
       break;
             case TRANSMISION:
+							
+							// Solo enviar si hay cambios pendientes
               if (tx_pendiente) {
-
+								
+								// Esperar a que SLAVE esté en RUN
 								if (estado == 1) {
-										printf("[MASTER] Slave en RUN, enviando umbrales\n");
-										enviar_umbrales_a_slave();
-										tx_pendiente = false;
+									printf("[MASTER] Slave en RUN, enviando umbrales\n");
+									enviar_umbrales_a_slave();
+									tx_pendiente = false;
 
-										modo_master = RECEPCION;
-										//printf("[MASTER] ? Transición a RECEPCION\n\n");
+									modo_master = RECEPCION;	
 
 								} else {
+									// SLAVE aún no en RUN, esperar
 										osDelay(10);  
 								}
-
 						} else {
+							// Sin cambios pendientes
 								modo_master = RECEPCION;
 						}
         break;
       
       break;
             
-              case WEB:
+            case WEB:
                 
-              /**CREAMOS UN CICLO QUE REVISE LA WEB CADA 5 SEG**/
+              //CREAMOS UN CICLO QUE REVISE LA WEB CADA 5 SEG
               
-                 tiempo = osKernelGetTickCount();
-              if((tiempo - last_check) > 5000)
-              {
-               //printf("[MASTER] Estado: WEB (VERIFICACION DE DATOS )\n");
+							tiempo = osKernelGetTickCount();
+              if((tiempo - last_check) > 5000){
                     last_check = tiempo;
               }
-                if (tx_pendiente) {
-            //printf("[MASTER] ? Cambios detectados, volviendo a TRANSMISION\n\n");
-            modo_master = TRANSMISION;
-          } else {
-            //printf("[MASTER] ? Esperando cambios...\n");
-          }
-        
-  osDelay(500);
+							
+              if (tx_pendiente) {
+								modo_master = TRANSMISION;
+							} else {
+							//printf("[MASTER] ? Esperando cambios...\n");
+							}
+						osDelay(500);
           
-      break;
+					break;
           default:
-        printf("[MASTER] Estado desconocido\n");
-        osDelay(100);
-        break;
-    
+						printf("[MASTER] Estado desconocido\n");
+						osDelay(100);
+					break;
   }
   
 }
 
 void Inicializacion(void)
 {
-  //printf("[MASTER] === Inicializando Master ===\n");
   //Inicializamos todo lo que vamos a usar, menos los hilos qeu lo haremos en el Server, en el  app_main
-  //printf("[MASTER] Init I2C...\n");
   Init_I2C();
+	
   osDelay(100);
+	
   mid_ComQueue = osMessageQueueNew(10, sizeof(MSGQUEUE_OBJ_COM_t), NULL);
  // Inicializar UART
-  //printf("[MASTER] Init UART...\n");
   UART_Init();
 	Init_ThCom();
 	Init_ThRecep();
-	
+
 	Init_Logger();
 	
 	UART_SetThreadIds(tid_ThCom, tid_ThRecep);
   osDelay(100);
   
   
-  //Inicilazaira NSTP Y RTC 
+  //Inicilazar NSTP Y RTC 
   RTC_Init();
   Init_ThSNTP();
   
   printf("[MASTER] Cargando umbrales desde EEPROM...\n");
   leer_umbrales(&th_temp, &th_co2, &th_tvoc);
   
-  //printf("[MASTER] Umbrales confirmados: T=%d, CO2=%d, TVOC=%d\n", 
-  //       th_temp, th_co2, th_tvoc);
   osDelay(100);
-  
-   //printf("[MASTER] === Inicialización completa ===\n\n");
   
   modo_master = TRANSMISION;
   tx_pendiente = true; 
@@ -171,15 +170,15 @@ void enviar_umbrales_a_slave(void)
   
   send_uart_command(1, th_temp );
   printf("  ? Temp: 1 %d\n",th_temp );
-  osDelay(50);
+  osDelay(150);
   
   send_uart_command(2, th_co2);
   printf("  ? CO2: 2 %d\n", th_co2);
-  osDelay(50);
+  osDelay(150);
 
   send_uart_command(3, th_tvoc);
   printf("  ? TVOC: 3 %d\n", th_tvoc);
-  
+  osDelay(150);
   rx_confirmado = false;
   timeout_rx = osKernelGetTickCount();
 }
@@ -188,13 +187,12 @@ void enviar_umbrales_a_slave(void)
 
 static void send_uart_command(uint16_t id, uint16_t valor) {
   MSGQUEUE_OBJ_COM_t out;
-  out.TamMens = sprintf(out.Mensaje, "\n%d %d\r\n", id, valor);
+  out.TamMens = sprintf(out.Mensaje, "\n%d %d\r\n", id, valor);   
   osMessageQueuePut(mid_ComQueue, &out, 0U, 100U);
 }
 
 // MARCAR CAMBIO DE UMBRALES (desde CGI) 
 void Master_confirm(void) {
- // printf("[MASTER] ?? Cambio de umbrales detectado\n");
   tx_pendiente = true;
 }
  

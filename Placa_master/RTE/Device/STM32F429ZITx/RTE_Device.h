@@ -505,7 +505,7 @@
 
 // <e> UART5 (Universal asynchronous receiver transmitter) [Driver_USART5]
 // <i> Configuration settings for Driver_USART5 in component ::CMSIS Driver:USART
-#define RTE_UART5                       1
+#define RTE_UART5                       0
 
 //   <o> UART5_TX Pin <0=>Not Used <1=>PC12 <2=>PB6 <3=>PB9 <4=>PB13
 #define RTE_UART5_TX_ID                 0
@@ -1222,7 +1222,7 @@
 
 // <e> SPI1 (Serial Peripheral Interface 1) [Driver_SPI1]
 // <i> Configuration settings for Driver_SPI1 in component ::CMSIS Driver:SPI
-#define RTE_SPI1                        1
+#define RTE_SPI1                        0
 
 //   <o> SPI1_MISO Pin <0=>Not Used <1=>PA6 <2=>PB4
 #define RTE_SPI1_MISO_PORT_ID           0

@@ -8,7 +8,7 @@ t </script></head>
 i pg_header.inc
 t <div class="card">
 t  <h2>Configuracion</h2>
-t  <p class="hint">Ajusta parametros del sistema. (Luego podeis persistir en EEPROM).</p>
+t  <p class="hint">Ajusta parametros del sistema.</p>
 t  <form action="index.htm" method="post" name="cfg">
 t   <input type=hidden value="cfg" name=pg>
 t   <table>
@@ -34,7 +34,6 @@ t    </tr>
 t   </table>
 t   <p style="margin-top:12px">
 t     <input class="btn" type=button value="Guardar" onclick="confirmSave(this.form)">
-t     <input class="btn secondary" type=reset value="Deshacer">
 t   </p>
 t  </form>
 t </div>

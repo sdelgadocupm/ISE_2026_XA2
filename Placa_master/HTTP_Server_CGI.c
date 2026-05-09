@@ -17,7 +17,6 @@
 #include "Memoria.h"
 #include "Master.h"
 #include "RTC.h"
-//#include "Board_LED.h"                  // ::Board Support:LED
 
 #if      defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
 #pragma  clang diagnostic push
@@ -34,15 +33,9 @@ extern uint16_t AD_in (uint32_t ch);
 static uint8_t P2;
 static uint8_t ip_addr[NET_ADDR_IP6_LEN];
 static char    ip_string[40];
-extern int adc_value;
-uint32_t volts;
-uint32_t mv_total ;
-uint32_t mvolts ;
 
 
 //Varables necesarias para las medidas
-
-
 extern osMessageQueueId_t mid_ComQueue;
 
 extern uint16_t temp;
@@ -64,6 +57,7 @@ RTC_DateTypeDef sDate;
 
 char hora_str[20]; 
 char fecha_str[20]; 
+
 // My structure of CGI status variable.
 typedef struct {
   uint8_t idx;
@@ -133,15 +127,15 @@ void netCGI_ProcessQuery (const char *qstr) {
 //            - 4 = any XML encoded POST data (single or last stream).
 //            - 5 = the same as 4, but with more XML data to follow.
 void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
+	
   char var[40],passw[12];
 	bool umbrales_cambiados = false;
+	
   if (code != 0) {
     // Ignore all other codes
     return;
   }
-
   P2 = 0;
-  
   if (len == 0) {
     // No data or all items (radio, checkbox) are off
     
@@ -152,47 +146,7 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
     // Parse all parameters
     data = netCGI_GetEnvVar (data, var, sizeof (var));
     if (var[0] != 0) {
-      // First character is non-null, string exists
-      if (strcmp (var, "led0=on") == 0) {
-        P2 |= 0x01;
-      }
-      else if (strcmp (var, "led1=on") == 0) {
-        P2 |= 0x02;
-      }
-      else if (strcmp (var, "led2=on") == 0) {
-        P2 |= 0x04;
-      }
-      else if (strcmp (var, "led3=on") == 0) {
-        P2 |= 0x08;
-      }
-      else if (strcmp (var, "ctrl=Browser") == 0) {
-        
-      }
-      else if ((strncmp (var, "pw0=", 4) == 0) ||
-               (strncmp (var, "pw2=", 4) == 0)) {
-        // Change password, retyped password
-        if (netHTTPs_LoginActive()) {
-          if (passw[0] == 1) {
-            strcpy (passw, var+4);
-          }
-          else if (strcmp (passw, var+4) == 0) {
-            // Both strings are equal, change the password
-            netHTTPs_SetPassword (passw);
-          }
-        }
-      }
-      else if (strncmp (var, "lcd1=", 5) == 0) {
-        // LCD Module line 1 text
-       
-      }
-      else if (strncmp (var, "lcd2=", 5) == 0) {
-        
-      }else if(strncmp(var, "pg=3", 3) == 0)
-      {
-        strncpy(last_pg, var + 3, sizeof(last_pg)-1);
-          last_pg[sizeof(last_pg)-1] = '\0';
-      }else if(strcmp(var, "cmd=disable_alarm") == 0)
-      {
+			if(strcmp(var, "cmd=disable_alarm") == 0){
         //Enviamos los comando por UART
         MSGQUEUE_OBJ_COM_t out;
 				out.TamMens = sprintf(out.Mensaje, "4 1\r\n");
@@ -375,23 +329,6 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
     case 'f':
 
       break;
-						
-//    case 'g':
-//      // AD Input from 'ad.cgi'
-//      switch (env[2]) {
-//        case '1':
-////          adv = AD_in(0);
-//          len = (uint32_t)sprintf (buf, &env[4], adv);
-//          break;
-//				case '2':
-//          len = (uint32_t)sprintf (buf, &env[4], (double)((float)adv*3.3f)/4096);
-//          break;
-//        case '3':
-//          adv = (adv * 100) / 4096;
-//          len = (uint32_t)sprintf (buf, &env[4], adv);
-//          break;
-//      }
-//      break;
       
         case 's':
           switch (env[2])
@@ -568,20 +505,13 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 													idx_hist = MAX_ALARM_EVENTS - 1;
 											}
 
-											// ?? PARADA CLAVE: si volvemos al write_idx ? STOP
+											// PARADA CLAVE: si volvemos al write_idx -> STOP
 											if ((uint16_t)idx_hist == write_idx) {
 													break;
 											}
 									}
 									break;
 							}
-                  
-//    case 'x':
-//      // AD Input from 'ad.cgx'
-//      adv = AD_in (0);
-//      len = (uint32_t)sprintf (buf, &env[1], adv);
-//      break;
-
   }
   return (len);
 }

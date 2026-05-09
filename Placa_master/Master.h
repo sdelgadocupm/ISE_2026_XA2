@@ -13,6 +13,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+//Estados de la máquina principal
+
 typedef enum
 {
   INIT,
@@ -33,18 +35,10 @@ static bool rx_confirmado = false;
 static uint32_t timeout_rx = 0;          
 #define RX_TIMEOUT_MS 5000               
 
- extern uint16_t th_temp ;
- extern uint16_t   th_co2 ;
- extern uint16_t   th_tvoc;
+extern uint16_t th_temp ;
+extern uint16_t   th_co2 ;
+extern uint16_t   th_tvoc;
 
 static uint32_t last_check = 0;
-
-
-
-
-
-
-
-
 
 #endif

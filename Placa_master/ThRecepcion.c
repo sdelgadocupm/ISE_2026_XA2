@@ -7,7 +7,7 @@
 #include "RTC.h"
 
 /*----------------------------------------------------------------------------
- *      Thread 1 'Thread_Name': Sample thread
+ *      Thread 1 'ThRecepción': Hilo de recepción de datos UART
  *---------------------------------------------------------------------------*/
  
 osThreadId_t tid_ThRecep;                        // thread id
@@ -19,25 +19,38 @@ MSGQUEUE_ALARM_t msg;
 
 osMessageQueueId_t mid_AlarmQueue;
 
+// Variables de sensores
 uint16_t temp;
 uint16_t co2;
 uint16_t tvoc;
+
+// Datos de RFID
 uint8_t RFID[4];
+
+// Datos de consumo
 uint16_t consumo; 
+
+// Control del SLAVE
 uint16_t estado; 
 uint16_t modo; 
 uint16_t modo_ant; 
 
+// Para el timestamp
 char ultima_actualizacion[25] = "Esperando datos...";
-//INICIALIZACIÓN DEL HILO	
+
+/*----------------------------------------------------------------------------
+ *      INICIALIZACIÓN DEL HILO
+ *---------------------------------------------------------------------------*/
 
 int Init_ThRecep (void) {
 	
-  mid_AlarmQueue = osMessageQueueNew(10, sizeof(MSGQUEUE_ALARM_t), NULL);
+	// Crear cola de eventos.
+  mid_AlarmQueue = osMessageQueueNew(4, sizeof(MSGQUEUE_ALARM_t), NULL);
     if (mid_AlarmQueue == NULL) {
         return(-1);
-    }
+  }
 		
+	// Crear thread receptor
   tid_ThRecep = osThreadNew(ThRecep, NULL, NULL);
   if (tid_ThRecep == NULL) {
     return(-1);
@@ -50,19 +63,22 @@ void ThRecep (void *argument) {
 	
 	uint8_t byte_entrante;
   uint8_t indice = 0;
-  static char buffer_local[64];
+  static char buffer_local[64];   //Buffer línea completa
 	
 	
   while (1) {
 		
+		// Iniciar recepción asincrónica de 1 byte
 		UART_Receive(&byte_entrante, 1); 
+		
+		// Esperar a la callback UART
 		osThreadFlagsWait(0x02, osFlagsWaitAny , osWaitForever);
 		
-		
+		// Detectar fin de línea
 		if (byte_entrante == '\n' || byte_entrante == '\r') {
 			if (indice > 0) {
         buffer_local[indice] = '\0'; // Cerramos el string
-        ProcesarTrama(buffer_local);  // Analizamos Trama
+        ProcesarTrama(buffer_local);  // Analizamos trama
         indice = 0; // Reset para la próxima vez
        }
      }else {
@@ -79,11 +95,13 @@ void ProcesarTrama(char *buffer) {
     // sscanf busca el primer entero, salta el espacio y busca el segundo
     if (sscanf(buffer, "%d %d", &id, &valor) == 2) {
 			
+			  /* Obtener timestamp actual del RTC */
 				RTC_TimeTypeDef sTime;
         RTC_DateTypeDef sDate;
         HAL_RTC_GetTime(&RtcHandle, &sTime, RTC_FORMAT_BIN);
         HAL_RTC_GetDate(&RtcHandle, &sDate, RTC_FORMAT_BIN);
-        
+			
+        // Actualizar string de timestamp del servidor
         sprintf(ultima_actualizacion, "%02d-%02d-20%02d %02d:%02d:%02d", 
                 sDate.Date, sDate.Month, sDate.Year, 
                 sTime.Hours, sTime.Minutes, sTime.Seconds);
@@ -124,7 +142,6 @@ void ProcesarTrama(char *buffer) {
 							  printf("[RX] \n");
 							  char rfid_hex[9] = {0};
 								int result = sscanf(buffer, "%d %8s", &id, rfid_hex);
-								//printf("[RX] RFID recibido: %s\n", rfid_hex);
 								if (result == 2 && strlen(rfid_hex) == 8) {
 										// Convertir string hex a bytes
 									  char byte_hex[3] = {0};
@@ -149,8 +166,6 @@ void ProcesarTrama(char *buffer) {
                     byte_hex[1] = rfid_hex[7];
                     RFID[3] = (uint8_t)strtol(byte_hex, NULL, 16);
                     
-                    //printf("[RX] RFID parsado: %02X%02X%02X%02X\n", 
-                    //       RFID[0], RFID[1], RFID[2], RFID[3]);
 										
 										msg.rfid[0] = RFID[0];
 										msg.rfid[1] = RFID[1];
@@ -159,7 +174,7 @@ void ProcesarTrama(char *buffer) {
 								}
                 break;
 						case 7: // Consumo
-								printf("[RX] ? Consumo es %d\n");
+								printf("[RX] ? Consumo es %d\n", valor);
 								consumo = (uint16_t)valor;
                 break;
 						default:

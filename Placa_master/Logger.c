@@ -2,7 +2,7 @@
 #include "Logger.h"
 #include "Recepcion.h"
 #include "Memoria.h"
-//#include "RTC.h"
+#include "RTC.h"
 #include <stdio.h>
 #include <string.h>
 #include "ThCom.h"  // Para acceder a mid_ComQueue
@@ -27,9 +27,6 @@ static int EEPROM_Write_Abs(uint16_t addr, uint8_t *data, uint32_t len) {
     return 0;
 }
 
-/**
- * @brief Lee datos de EEPROM en dirección absoluta (SIN usar lecturaDeValor)
- */
 
 static int EEPROM_Read_Abs(uint16_t addr, uint8_t *data, uint32_t len) {
     uint8_t rd_addr[2];
@@ -39,25 +36,6 @@ static int EEPROM_Read_Abs(uint16_t addr, uint8_t *data, uint32_t len) {
     
     EEPROM_Read_Event(rd_addr, data, len);
     return 0;
-}
-
-static uint16_t get_alarm_event_count(void) {
-    // Contar cuántos eventos válidos hay realmente
-    uint8_t buffer[ALARM_EVENT_SIZE];
-    uint16_t count = 0;
-    
-    for (uint16_t i = 0; i < MAX_ALARM_EVENTS; i++) {
-        uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (i * ALARM_EVENT_SIZE);
-        EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
-        
-        if (buffer[0] == 0xAA) {
-            count++;
-        } else if (buffer[0] == 0xFF) {
-            break;  // Fin de eventos válidos
-        }
-    }
-    
-    return count;
 }
 
 
@@ -77,8 +55,9 @@ uint8_t buffer[ALARM_EVENT_SIZE];
     }
     
     // Si llegamos aquí, la EEPROM está llena
-    return 0;  // Ring buffer: vuelve al inicio
+    return 0;  // vuelve al inicio
 }
+
 
 // INICIALIZACIÓN DEL THREAD
 int Init_Logger(void) {
@@ -143,8 +122,6 @@ static void guardar_evento_alarma(AlarmEvent_t *event) {
     uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (index * ALARM_EVENT_SIZE);
     uint8_t buffer[ALARM_EVENT_SIZE];
 
-    
-    // Usar función de Memoria.c
     EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
     
 		if (buffer[0] != 0xAA) {
@@ -222,41 +199,6 @@ void Logger(void *argument) {
                 guardar_evento_alarma(&current_alarm);
                 alarma_en_progreso = false;
 								
-//								uint8_t buffer[ALARM_EVENT_SIZE];
-//                uint16_t eventos_validos = 0;
-//								for (uint16_t i = 0; i < MAX_ALARM_EVENTS; i++) {
-//                    uint16_t addr = ALARM_EVENTS_PAGE_ADDR + (i * ALARM_EVENT_SIZE);
-//                    EEPROM_Read_Abs(addr, buffer, ALARM_EVENT_SIZE);
-//                    
-//                    if (buffer[0] == 0xAA) {
-//                        eventos_validos++;
-//                        uint16_t temp = ((uint16_t)buffer[1] << 8) | buffer[2];
-//                        uint16_t co2 = ((uint16_t)buffer[3] << 8) | buffer[4];
-//                        uint16_t tvoc = ((uint16_t)buffer[5] << 8) | buffer[6];
-//                        uint8_t h_act = buffer[7];
-//                        uint8_t m_act = buffer[8];
-//                        uint8_t s_act = buffer[9];
-//                        uint8_t h_desac = buffer[10];
-//                        uint8_t m_desac = buffer[11];
-//                        uint8_t s_desac = buffer[12];
-//                        uint8_t tipo_desac = buffer[13];
-//                        uint8_t rfid0 = buffer[14];
-//                        uint8_t rfid1 = buffer[15];
-//                        uint8_t rfid2 = buffer[16];
-//                        uint8_t rfid3 = buffer[17];
-//                        
-//                        const char *tipo = (tipo_desac == 0) ? "RFID" : (tipo_desac == 1) ? "REMOTO" : "PENDING";
-//                        
-//                        printf("[%2u] %02u:%02u:%02u -> %02u:%02u:%02u | T=%u CO2=%u TVOC=%u | %s %02X%02X%02X%02X\n",
-//                               i, h_act, m_act, s_act, h_desac, m_desac, s_desac, 
-//                               temp, co2, tvoc, tipo, rfid0, rfid1, rfid2, rfid3);
-//                    } else if (buffer[0] == 0xFF) {
-//                        break;
-//                    }
-//                }
-//                
-//                printf("Total: %u eventos\n", eventos_validos);
-//                printf("==================================\n\n");
 						}
         }
         
@@ -272,7 +214,6 @@ uint16_t Logger_GetWriteIndex(void) {
 int Logger_ReadEvent(uint16_t index, AlarmEvent_t *event) {
   
   leer_evento_alarma_master(index, event);
-
   // si no es válido, leer_evento_alarma_master hace memset 0, borramos 
   return (event->validacion == 0xAA) ? 1 : 0;
 }
