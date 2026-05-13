@@ -183,7 +183,7 @@
             <hadIRAM>1</hadIRAM>
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
-            <RvdsVP>2</RvdsVP>
+            <RvdsVP>1</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>1</hadIRAM2>
@@ -389,14 +389,14 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>Principal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Principal.c</FilePath>
-            </File>
-            <File>
               <FileName>Principal.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Principal.h</FilePath>
+            </File>
+            <File>
+              <FileName>Principal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Principal.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -13,7 +13,7 @@ t   </div></div>
 t   <div class="kpi"><div class="label">Consumo</div><div class="value">
 c s 3 %u mA
 t   </div></div>
-t   <div class="kpi"><div class="label">ltima actualizacin</div><div class="value">
+t   <div class="kpi"><div class="label">Última actualizacin</div><div class="value">
 c s 4 %s
 t   </div></div>
 t   <div class="kpi"><div class="label">Fecha actual</div><div class="value">

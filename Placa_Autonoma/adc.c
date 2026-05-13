@@ -1,9 +1,10 @@
 #include "stm32f4xx_hal.h"
 #define RESOLUTION_12B 4096U
 #define VREF 3.3f
-#define RESISTENCIA_SHUNT 1
-#define CORRIENTE 10
+#define RESISTENCIA_SHUNT 0.1
+#define CORRIENTE 0.001
 #define RO 100
+#define GANANCIA 26
 #define ALFA 0.00385
 #include "adc.h"
 
@@ -76,10 +77,10 @@ uint16_t ADC_getTemp(ADC_HandleTypeDef *hadc)
 		ADC_ChannelConfTypeDef sConfig = {0};
 		HAL_StatusTypeDef status;
 
-		uint32_t raw = 0;
+		float raw = 0;
 		float voltage = 0;
 		float resistencia = 0;
-		uint16_t temp = 0;
+		float temp = 0;
 		 /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
   sConfig.Channel = 10;
@@ -100,10 +101,10 @@ uint16_t ADC_getTemp(ADC_HandleTypeDef *hadc)
 		
 		voltage = raw*VREF/RESOLUTION_12B; 
 		
-		resistencia = voltage/CORRIENTE;
+		resistencia = voltage/(CORRIENTE*GANANCIA);
 		
-		temp = ((resistencia/RO)-1)*ALFA;
-		return temp;
+		temp = ((resistencia/RO)-1)/ALFA;
+		return (uint16_t)temp;
 
 }
 	
@@ -112,9 +113,9 @@ uint16_t ADC_getConsumo(ADC_HandleTypeDef *hadc)
 		ADC_ChannelConfTypeDef sConfig = {0};
 		HAL_StatusTypeDef status;
 
-		uint32_t raw = 0;
+		float raw = 0;
 		float voltage = 0;
-		uint16_t corriente = 0;
+		float corriente = 0;
 
 		 /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
@@ -136,9 +137,9 @@ uint16_t ADC_getConsumo(ADC_HandleTypeDef *hadc)
 		
 		voltage = raw*VREF/RESOLUTION_12B; 
 		
-		corriente = voltage/RESISTENCIA_SHUNT;
+		corriente = 1000*voltage/(RESISTENCIA_SHUNT*21);
 		
-		return corriente;
+		return (uint16_t) corriente;
 
 }
 	

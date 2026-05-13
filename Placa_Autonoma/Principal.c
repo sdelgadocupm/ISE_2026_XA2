@@ -19,6 +19,7 @@ extern osThreadId_t tid_ThRecep;
  
  //Umbrales globales
  uint16_t umbral_temp = 50;
+ uint16_t consumo = 0;
  uint16_t umbral_co2 = 1200;
  uint16_t umbral_tvoc = 400;
  
@@ -105,12 +106,19 @@ void Principal (void *argument) {
 				msg_com.TamMens = sprintf(msg_com.Mensaje, "%d %d\n", ESTADO, RUN);
 				osMessageQueuePut(mid_ComQueue, &msg_com, 0U, 0U);
 				//Medida de la temperatura
-			  //temp = ADC_getTemp(&adchandle);
-				osDelay(500);
-				//Enviar temperatura al servidor
-				msg_com.TamMens = sprintf(msg_com.Mensaje, "%d %d\n", TEMPERATURA, temp);
+			  temp = ADC_getTemp(&adchandle);
+        msg_com.TamMens = sprintf(msg_com.Mensaje, "%d %d\n", TEMPERATURA, temp);
 				osMessageQueuePut(mid_ComQueue, &msg_com, 0U, 0U);
 				osDelay(100);
+        
+        consumo = ADC_getConsumo(&adchandle);
+        msg_com.TamMens = sprintf(msg_com.Mensaje, "%d %d\n", CONSUMO, consumo);
+				osMessageQueuePut(mid_ComQueue, &msg_com, 0U, 0U);
+				osDelay(100);
+        
+        
+				osDelay(500);
+				//Enviar temperatura al servidor
 //				printf("%d\n",temp);
 				
 				//Comparación de la medida

@@ -37,7 +37,7 @@ void ThSNTP (void *argument) {
 void sntp_client_cb (uint32_t seconds, uint32_t seconds_fraction) {
 
     struct tm ts;
-    uint32_t UTC_seconds = seconds+3600;
+    uint32_t UTC_seconds = seconds+7200;
   
     ts = *localtime(&UTC_seconds);
 

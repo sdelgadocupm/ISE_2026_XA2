@@ -33,7 +33,7 @@ void UART_Init(void) {
                       ARM_USART_DATA_BITS_8|
                       ARM_USART_PARITY_NONE|
                       ARM_USART_STOP_BITS_1|
-                      ARM_USART_FLOW_CONTROL_NONE, 9600);
+                      ARM_USART_FLOW_CONTROL_NONE, 19200);
     
     // Habilitar RX Y TX
     USARTdrv->Control(ARM_USART_CONTROL_RX, 1);
